@@ -13,7 +13,6 @@ export default function Login() {
   const handleLogin = async () => {
     const q = query(collection(db, "users"), where("email", "==", email), where("password", "==", password));
     const querySnapshot = await getDocs(q);
-
     if (!querySnapshot.empty) {
       const userDoc = querySnapshot.docs[0];
       const userData = userDoc.data();
