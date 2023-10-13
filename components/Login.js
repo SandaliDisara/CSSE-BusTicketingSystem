@@ -1,35 +1,40 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { StyleSheet, Text, View, TextInput, Button } from "react-native";
 import { collection, doc, getDocs, query, where } from "firebase/firestore";
 import { db } from "./config.jsx";
 import { useNavigation } from '@react-navigation/native';
+import Toast from 'react-native-toast-message';
 
 export default function Login() {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [userData, setUserData] = useState(null);
   const navigation = useNavigation();
-
+  const showToast = (message) => {
+    Toast.show({
+      type: 'success',
+      position: 'bottom',
+      text1: message,
+      timeout: "3s",
+    });
+  };
   const handleLogin = async () => {
     const q = query(collection(db, "users"), where("email", "==", email), where("password", "==", password));
     const querySnapshot = await getDocs(q);
-
     if (!querySnapshot.empty) {
       const userDoc = querySnapshot.docs[0];
       const userData = userDoc.data();
       console.log("User Data:", userData);
-      
-      // Log the document ID
       const userId = userDoc.id;
       console.log("Document ID:", userId);
-
-      // Navigate to ProfileDetails with the user ID as a parameter
       navigation.navigate("ProfileDetails", { userId });
     } else {
       console.log("User not found.");
+      showToast("Invalid Email or Password !");
+      setEmail("");
+      setPassword("");
     }
   };
-
   return (
     <View style={styles.container}>
       <Text style={[styles.topicRegT, { opacity: 0.5 }]}>ticketX</Text><br/><br/><br/><br/>
@@ -52,6 +57,7 @@ export default function Login() {
       </View><br/>
       <Text style={styles.whiteText}>Don't have an account?</Text><br/>
       <Text onPress={() => navigation.navigate("Register")} style={styles.whiteText}><b>Register</b></Text>
+      <Toast ref={(ref) => Toast.setRef(ref)} />
       {userData && (
         <View>
           <Text>Login Successfully</Text>
@@ -63,7 +69,6 @@ export default function Login() {
     </View>
   );
 }
-
 const styles = StyleSheet.create({
   container: {
     flex: 1,
