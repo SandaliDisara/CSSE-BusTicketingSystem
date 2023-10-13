@@ -1,8 +1,10 @@
 import React from "react";
-import { View } from "react-native";
-// import AppNavigator from "./navigation/AppNavigator";
-import TopUpOptions from "./components/TopUsOptions";
+import AppNavigator from "./navigation/AppNavigator";
 
 export default function App() {
-  return <TopUpOptions />;
+  return (
+    <>
+      <AppNavigator />
+    </>
+  );
 }
