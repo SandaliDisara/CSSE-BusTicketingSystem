@@ -11,15 +11,12 @@ export default function ProfileDetails() {
   const [phone, setPhone] = useState("");
   const navigation = useNavigation();
   const route = useRoute();
-
   const userId = route.params?.userId;
-
   useEffect(() => {
     const fetchData = async () => {
       try {
         const docRef = doc(db, "users", userId);
         const docSnap = await getDoc(docRef);
-
         if (docSnap.exists()) {
           const userData = docSnap.data();
           setName(userData.name);
@@ -30,11 +27,9 @@ export default function ProfileDetails() {
         console.error("Error fetching user data: ", error);
       }
     };
-
     if (route.params?.updatedName) {
       setName(route.params.updatedName);
     }
-
     if (route.params?.updatedEmail) {
       setEmail(route.params.updatedEmail);
     }
@@ -43,11 +38,9 @@ export default function ProfileDetails() {
     }
     fetchData();
   }, [userId, route.params]);
-
   const handleEditProfile = () => {
     navigation.navigate("Profile", { userId });
   };
-
   const handleDelete=() =>{
     deleteDoc(doc(db, "users", userId))
       .then(() => {
@@ -58,7 +51,6 @@ export default function ProfileDetails() {
         console.log(error);
       });
   }
-
   const showProfileUpdatedToast = () => {
     Toast.show({
       type: "success",
