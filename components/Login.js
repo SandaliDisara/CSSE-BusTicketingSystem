@@ -18,12 +18,8 @@ export default function Login() {
       const userDoc = querySnapshot.docs[0];
       const userData = userDoc.data();
       console.log("User Data:", userData);
-      
-      // Log the document ID
       const userId = userDoc.id;
       console.log("Document ID:", userId);
-
-      // Navigate to ProfileDetails with the user ID as a parameter
       navigation.navigate("ProfileDetails", { userId });
     } else {
       console.log("User not found.");
