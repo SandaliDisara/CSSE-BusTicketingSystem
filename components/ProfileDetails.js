@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from "react";
 import { StyleSheet, Text, View, TextInput, Button } from "react-native";
-import { collection, doc, getDoc, updateDoc } from "firebase/firestore";
+import { collection, doc, getDoc, deleteDoc } from "firebase/firestore";
 import { db } from "./config.jsx";
 import Toast from "react-native-toast-message";
 import { useNavigation, useRoute } from "@react-navigation/native";
@@ -48,6 +48,17 @@ export default function ProfileDetails() {
     navigation.navigate("Profile", { userId });
   };
 
+  const handleDelete=() =>{
+    deleteDoc(doc(db, "users", userId))
+      .then(() => {
+        console.log("data deleted");
+        navigation.navigate("Login");
+      })
+      .catch((error) => {
+        console.log(error);
+      });
+  }
+
   const showProfileUpdatedToast = () => {
     Toast.show({
       type: "success",
@@ -55,8 +66,7 @@ export default function ProfileDetails() {
       text1: "Profile Updated",
       visibilityTime: 3000,
       onShow: () => {
-        // Reload the ProfileDetails component to reflect the updated data
-        navigation.navigate("ProfileDetails", { userId });
+        navigation.navigate("ProfileDetails", userId );
       },
     });
   };
@@ -65,7 +75,7 @@ export default function ProfileDetails() {
     <View style={styles.container}>
       <Text style={styles.topicReg}>
         <b>Hi, {name}</b>
-      </Text>
+      </Text><br/>
       <View style={styles.labelContainer}>
         <Text style={styles.label}>Name:</Text>
         <TextInput
@@ -92,14 +102,14 @@ export default function ProfileDetails() {
           editable={false}
           selectable={false}
         />
-      </View>
+      </View><br /><br />
       <View style={[styles.button, styles.inputWidth]}>
         <Text onPress={handleEditProfile} style={styles.buttonText}>
           <b>Edit Profile Data</b>
         </Text>
       </View>
       <View style={[styles.button, styles.inputWidth]}>
-        <Text style={styles.buttonText} onPress={showProfileUpdatedToast}>
+        <Text style={styles.buttonText} onPress={handleDelete }>
           <b>Delete Profile</b>
         </Text>
       </View>
