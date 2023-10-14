@@ -4,7 +4,7 @@ import { collection, doc, getDocs, query, where } from "firebase/firestore";
 import { db } from "./config.jsx";
 import { useNavigation } from '@react-navigation/native';
 import Toast from 'react-native-toast-message';
-import { styles } from "./LoginStyles";
+import { styles } from "../css/LoginStyles"
 
 export default function Login() {
   const [email, setEmail] = useState("");

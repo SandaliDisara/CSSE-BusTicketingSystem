@@ -10,7 +10,7 @@ import {
 import CommonHeader from "./Header";
 import { db } from "./config";
 import { useNavigation } from "@react-navigation/native";
-import {styles} from "./HomeStyles";
+import {styles} from "../css/HomeStyles"
 
 export default function Home() {
   const [from, setFrom] = useState("");
