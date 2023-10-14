@@ -1,7 +1,6 @@
 import React from "react";
 import { View, Text, TouchableOpacity } from "react-native";
 import { FontAwesome } from "@expo/vector-icons";
-
 export default function CommonHeader() {
   return (
     <View style={styles.header}>
@@ -14,7 +13,6 @@ export default function CommonHeader() {
     </View>
   );
 }
-
 const styles = {
   header: {
     flexDirection: "row",
@@ -22,7 +20,7 @@ const styles = {
     alignItems: "center",
     paddingHorizontal: 20,
     marginTop: -38,
-    backgroundColor: "white", // Optionally set a background color
+    backgroundColor: "white", 
   },
   headerText: {
     fontSize: 30,
