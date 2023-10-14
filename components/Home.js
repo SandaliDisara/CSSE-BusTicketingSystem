@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import {
   View,
   TextInput,
@@ -9,12 +9,33 @@ import {
 } from "react-native";
 import CommonHeader from "./Header";
 import { db } from "./config";
-import { useNavigation } from "@react-navigation/native";
+import { useNavigation, useRoute } from "@react-navigation/native";
 
 export default function Home() {
+  const [name, setName] = useState("");
   const [from, setFrom] = useState("");
   const [to, setTo] = useState("");
   const navigation = useNavigation();
+  const route = useRoute();
+  const userId = route.params?.userId;
+
+  useEffect(() => {
+    const fetchData = async () => {
+      try {
+        const docRef = doc(db, "users", userId);
+        const docSnap = await getDoc(docRef);
+
+        if (docSnap.exists()) {
+          const userData = docSnap.data();
+          setName(userData.name);
+        }
+      } catch (error) {
+        console.error("Error fetching user data: ", error);
+      }
+    };
+
+    fetchData();
+  }, [userId]);
 
   const handleSearch = () => {
     // Navigate to BusList and pass 'from' and 'to' as route parameters
@@ -23,7 +44,7 @@ export default function Home() {
 
   return (
     <View style={styles.container}>
-      <CommonHeader />
+      <CommonHeader name={name} />
       <View style={styles.marginContainer}>
         <View style={styles.rectangle}>
           <Text style={styles.tltJourney}>Enter Your Journey</Text>

@@ -1,11 +1,16 @@
-import React from "react";
+import React, { useState } from "react";
 import { View, Text, TouchableOpacity } from "react-native";
 import { FontAwesome } from "@expo/vector-icons";
 
-export default function CommonHeader() {
+
+export default function CommonHeader({name}) {
+  
   return (
     <View style={styles.header}>
-      <Text style={styles.headerText}>Hello,{"\n"}Sandali Disara</Text>
+      <Text style={styles.headerText}>
+        Hello,{"\n"}
+        {name}
+      </Text>
       <TouchableOpacity style={styles.menuButton}>
         <View style={styles.menuIconCircle}>
           <FontAwesome name="bars" size={23} color="white" />
