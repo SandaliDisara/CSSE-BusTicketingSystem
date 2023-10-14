@@ -4,7 +4,6 @@ import { collection, doc, getDoc, updateDoc } from "firebase/firestore";
 import { db } from "./config.jsx";
 import Toast from "react-native-toast-message";
 import { useNavigation, useRoute } from "@react-navigation/native";
-
 export default function Profile() {
   const [name, setName] = useState("");
   const [email, setEmail] = useState("");
