@@ -15,13 +15,30 @@ export default function AppNavigator() {
   return (
     <NavigationContainer>
       <Stack.Navigator>
-        <Stack.Screen name="Login" component={Login}  options={{ headerShown: false }}/>
         <Stack.Screen name="Home" component={Home} />
+        <Stack.Screen
+          name="Login"
+          component={Login}
+          options={{ headerShown: false }}
+        />
+
         <Stack.Screen name="List of Busses" component={BusList} />
         <Stack.Screen name="Bus Information" component={BusInfo} />
-        <Stack.Screen name="ProfileDetails" component={ProfileDetails}  options={{ headerShown: false }}/>
-        <Stack.Screen name="Register" component={Register}  options={{ headerShown: false }}/>
-        <Stack.Screen name="Profile" component={Profile}  options={{ headerShown: false }}/>
+        <Stack.Screen
+          name="ProfileDetails"
+          component={ProfileDetails}
+          options={{ headerShown: false }}
+        />
+        <Stack.Screen
+          name="Register"
+          component={Register}
+          options={{ headerShown: false }}
+        />
+        <Stack.Screen
+          name="Profile"
+          component={Profile}
+          options={{ headerShown: false }}
+        />
       </Stack.Navigator>
     </NavigationContainer>
   );
