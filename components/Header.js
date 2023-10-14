@@ -2,7 +2,7 @@ import React, { useState } from "react";
 import { View, Text, TouchableOpacity, Modal, StyleSheet } from "react-native";
 import { FontAwesome } from "@expo/vector-icons";
 import { useNavigation } from '@react-navigation/native';
-import {styles} from "../css/HeaderStyles";
+import { styles } from "../css/HeaderStyles";
 
 export default function CommonHeader({ userName }) {
   const [menuVisible, setMenuVisible] = useState(false);
@@ -10,11 +10,9 @@ export default function CommonHeader({ userName }) {
   const toggleMenu = () => {
     setMenuVisible(!menuVisible);
   };
-
   const closeMenu = () => {
     setMenuVisible(false);
   };
-
   return (
     <View style={styles.header}>
       <Text style={styles.headerText}>
@@ -26,15 +24,13 @@ export default function CommonHeader({ userName }) {
           <FontAwesome name="bars" size={23} color="white" />
         </View>
       </TouchableOpacity>
-
-      <MenuSlider visible={menuVisible} closeMenu={closeMenu} />
+      <MenuSlider visible={menuVisible} closeMenu={closeMenu} navigation={navigation} />
     </View>
   );
 }
 
-function MenuSlider({ visible, closeMenu }) {
+function MenuSlider({ visible, closeMenu, navigation }) {
   if (!visible) return null;
-
   return (
     <Modal transparent={true} visible={visible}>
       <TouchableOpacity
@@ -43,10 +39,10 @@ function MenuSlider({ visible, closeMenu }) {
         onPress={closeMenu}
       >
         <View style={styles.menu}>
-          <TouchableOpacity onPress={closeMenu}>
+          <TouchableOpacity onPress={() => navigation.navigate("ViewProfile")}>
             <View style={styles.menuItemContainer}>
               <FontAwesome name="user" size={35} color="white" />
-              <Text onPress={() => navigation.navigate("ProfileDetails")} style={styles.menuItem}>Profile</Text>
+              <Text style={styles.menuItem}>Profile</Text>
             </View>
             <View style={styles.separator}></View>
           </TouchableOpacity>
@@ -75,4 +71,3 @@ function MenuSlider({ visible, closeMenu }) {
     </Modal>
   );
 }
-

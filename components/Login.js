@@ -32,7 +32,6 @@ export default function Login() {
       console.log("User Data:", userData);
       const userId = userDoc.id;
       console.log("Document ID:", userId);
-    //   navigation.navigate("ProfileDetails", { userId });
     navigation.navigate("Home", { userName: userData.name });
     } else {
       console.log("User not found.");
