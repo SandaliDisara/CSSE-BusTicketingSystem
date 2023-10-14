@@ -1,10 +1,9 @@
 import React, { useState, useEffect } from "react";
-import { StyleSheet, Text, View, TextInput, Button, Image } from "react-native";
+import { StyleSheet, Text, View, TextInput, Button, Image, TouchableOpacity } from "react-native";
 import { collection, doc, getDoc, updateDoc } from "firebase/firestore";
 import { db } from "./config.jsx";
 import Toast from "react-native-toast-message";
 import { useNavigation, useRoute } from "@react-navigation/native";
-import back from "../assets/back.png";
 
 export default function Profile() {
   const [name, setName] = useState("");
@@ -13,6 +12,7 @@ export default function Profile() {
   const navigation = useNavigation();
   const route = useRoute();
   const userId = route.params?.userId;
+
   useEffect(() => {
     const fetchData = async () => {
       try {
@@ -30,11 +30,13 @@ export default function Profile() {
     };
     fetchData();
   }, [userId]);
+
   useEffect(() => {
     if (route.params?.profileUpdated) {
       window.location.reload();
     }
   }, [route.params?.profileUpdated]);
+
   const handleUpdate = () => {
     updateDoc(doc(db, "users", userId), {
       name: name,
@@ -54,6 +56,7 @@ export default function Profile() {
         console.error("Error updating user data: ", error);
       });
   };
+
   const showToast = (message) => {
     Toast.show({
       type: "success",
@@ -62,44 +65,47 @@ export default function Profile() {
       visibilityTime: 3000,
     });
   };
+
   return (
     <View>
-        <View>
-        <Image source ={require("../assets/bck.png")} style={{ width:50, height:50, marginTop:"2%", marginLeft:"2%" }}/>
+      <TouchableOpacity onPress={() => navigation.navigate("ProfileDetails")}>
+        <Image source={require("../assets/bck.png")} style={{ width: 50, height: 50, marginTop: "2%", marginLeft: "2%" }} />
+      </TouchableOpacity>
+
+      <View style={styles.container}>
+        <Text style={styles.topicReg}>
+          <b>{name}</b>
+        </Text><br /> <br /> <br /> <br /><br />
+        <TextInput
+          value={name}
+          placeholder="Name"
+          onChangeText={setName}
+          style={[styles.input, styles.inputWidth]}
+        /> <br /> <br />
+        <TextInput
+          value={email}
+          placeholder="Email"
+          onChangeText={setEmail}
+          style={[styles.input, styles.inputWidth]}
+        />
+        <br /><br />
+        <TextInput
+          value={phone}
+          placeholder="Phone Number"
+          onChangeText={setPhone}
+          style={[styles.input, styles.inputWidth]}
+        /> <br /> <br />
+        <View style={[styles.button, styles.inputWidth]}>
+          <Text style={styles.buttonText} onPress={handleUpdate}>
+            <b>Save Changes</b>
+          </Text>
         </View>
-    <View style={styles.container}>
-      <Text style={styles.topicReg}>
-        <b>{name}</b>
-      </Text><br /> <br /> <br /> <br /><br />
-      <TextInput
-        value={name}
-        placeholder="Name"
-        onChangeText={setName}
-        style={[styles.input, styles.inputWidth]}
-      /> <br /> <br />
-      <TextInput
-        value={email}
-        placeholder="Email"
-        onChangeText={setEmail}
-        style={[styles.input, styles.inputWidth]}
-      />
-      <br /><br />
-      <TextInput
-        value={phone}
-        placeholder="Phone Number"
-        onChangeText={setPhone}
-        style={[styles.input, styles.inputWidth]}
-      /> <br /> <br />
-      <View style={[styles.button, styles.inputWidth]}>
-        <Text style={styles.buttonText} onPress={handleUpdate}>
-          <b>Save Changes</b>
-        </Text>
+        <Toast ref={(ref) => Toast.setRef(ref)} />
       </View>
-      <Toast ref={(ref) => Toast.setRef(ref)} />
-    </View>
     </View>
   );
 }
+
 const styles = StyleSheet.create({
   container: {
     flex: 1,
