@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import { StyleSheet, Text, View, TextInput, Button } from "react-native";
+import { StyleSheet, Text, View, TextInput, Button, Image, TouchableOpacity } from "react-native";
 import { collection, doc, getDoc, updateDoc } from "firebase/firestore";
 import { db } from "./config.jsx";
 import Toast from "react-native-toast-message";
@@ -11,8 +11,6 @@ export default function Profile() {
   const [phone, setPhone] = useState("");
   const navigation = useNavigation();
   const route = useRoute();
-
-  // Access the userId parameter from the route
   const userId = route.params?.userId;
 
   useEffect(() => {
@@ -20,7 +18,6 @@ export default function Profile() {
       try {
         const docRef = doc(db, "users", userId);
         const docSnap = await getDoc(docRef);
-
         if (docSnap.exists()) {
           const userData = docSnap.data();
           setName(userData.name);
@@ -31,14 +28,11 @@ export default function Profile() {
         console.error("Error fetching user data: ", error);
       }
     };
-
     fetchData();
   }, [userId]);
 
-  // Use this useEffect to trigger a page reload when 'profileUpdated' is true
   useEffect(() => {
     if (route.params?.profileUpdated) {
-      // Reload the page to get the latest data
       window.location.reload();
     }
   }, [route.params?.profileUpdated]);
@@ -51,8 +45,6 @@ export default function Profile() {
     })
       .then(() => {
         showToast("User Details Updated Successfully");
-  
-        // Pass the updated user data as parameters to ProfileDetails
         navigation.navigate("ProfileDetails", {
           userId,
           updatedName: name,
@@ -64,7 +56,6 @@ export default function Profile() {
         console.error("Error updating user data: ", error);
       });
   };
-  
 
   const showToast = (message) => {
     Toast.show({
@@ -76,35 +67,41 @@ export default function Profile() {
   };
 
   return (
-    <View style={styles.container}>
-      <Text style={styles.topicReg}>
-        <b>{name}</b>
-      </Text><br /> <br /> <br /> <br /><br />
-      <TextInput
-        value={name}
-        placeholder="Name"
-        onChangeText={setName}
-        style={[styles.input, styles.inputWidth]}
-      /> <br /> <br />
-      <TextInput
-        value={email}
-        placeholder="Email"
-        onChangeText={setEmail}
-        style={[styles.input, styles.inputWidth]}
-      />
-      <br /><br />
-      <TextInput
-        value={phone}
-        placeholder="Phone Number"
-        onChangeText={setPhone}
-        style={[styles.input, styles.inputWidth]}
-      /> <br /> <br />
-      <View style={[styles.button, styles.inputWidth]}>
-        <Text style={styles.buttonText} onPress={handleUpdate}>
-          <b>Save Changes</b>
-        </Text>
+    <View>
+      <TouchableOpacity onPress={() => navigation.navigate("ProfileDetails")}>
+        <Image source={require("../assets/bck.png")} style={{ width: 50, height: 50, marginTop: "8%", marginLeft: "3%" }} />
+      </TouchableOpacity>
+
+      <View style={styles.container}>
+        <Text style={styles.topicReg}>
+          <b>{name}</b>
+        </Text><br /> <br /> <br /> <br /><br />
+        <TextInput
+          value={name}
+          placeholder="Name"
+          onChangeText={setName}
+          style={[styles.input, styles.inputWidth]}
+        /> <br /> <br />
+        <TextInput
+          value={email}
+          placeholder="Email"
+          onChangeText={setEmail}
+          style={[styles.input, styles.inputWidth]}
+        />
+        <br /><br />
+        <TextInput
+          value={phone}
+          placeholder="Phone Number"
+          onChangeText={setPhone}
+          style={[styles.input, styles.inputWidth]}
+        /> <br /> <br />
+        <View style={[styles.button, styles.inputWidth]}>
+          <Text style={styles.buttonText} onPress={handleUpdate}>
+            <b>Save Changes</b>
+          </Text>
+        </View>
+        <Toast ref={(ref) => Toast.setRef(ref)} />
       </View>
-      <Toast ref={(ref) => Toast.setRef(ref)} />
     </View>
   );
 }

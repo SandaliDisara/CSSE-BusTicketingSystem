@@ -51,18 +51,6 @@ export default function ProfileDetails() {
         console.log(error);
       });
   }
-  const showProfileUpdatedToast = () => {
-    Toast.show({
-      type: "success",
-      position: "bottom",
-      text1: "Profile Updated",
-      visibilityTime: 3000,
-      onShow: () => {
-        navigation.navigate("ProfileDetails", userId );
-      },
-    });
-  };
-
   return (
     <View style={styles.container}>
       <Text style={styles.topicReg}>
@@ -109,7 +97,6 @@ export default function ProfileDetails() {
     </View>
   );
 }
-
 const styles = StyleSheet.create({
   container: {
     flex: 1,
@@ -129,7 +116,6 @@ const styles = StyleSheet.create({
   topicReg: {
     color: "black",
     fontSize: 30,
-    
   },
   input: {
     height: 50,
