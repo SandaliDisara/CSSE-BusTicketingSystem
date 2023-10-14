@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import {
   View,
   TextInput,
@@ -10,9 +10,8 @@ import {
 import CommonHeader from "./Header";
 import { db } from "./config";
 import { useNavigation } from "@react-navigation/native";
-import {styles} from "../css/HomeStyles"
+import { styles } from "../css/HomeStyles";
 import { useRoute } from "@react-navigation/native";
-
 
 export default function Home() {
   const route = useRoute();
@@ -21,7 +20,7 @@ export default function Home() {
   const navigation = useNavigation();
   const userName = route.params && route.params.userName;
   const handleSearch = () => {
-    navigation.navigate("List of Busses", { from, to });
+    navigation.navigate("List of Busses", { from, to, userName });
   };
 
   return (
@@ -78,4 +77,3 @@ export default function Home() {
     </View>
   );
 }
-
