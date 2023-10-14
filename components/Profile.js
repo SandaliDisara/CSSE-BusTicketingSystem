@@ -11,16 +11,12 @@ export default function Profile() {
   const [phone, setPhone] = useState("");
   const navigation = useNavigation();
   const route = useRoute();
-
-  // Access the userId parameter from the route
   const userId = route.params?.userId;
-
   useEffect(() => {
     const fetchData = async () => {
       try {
         const docRef = doc(db, "users", userId);
         const docSnap = await getDoc(docRef);
-
         if (docSnap.exists()) {
           const userData = docSnap.data();
           setName(userData.name);
@@ -31,18 +27,13 @@ export default function Profile() {
         console.error("Error fetching user data: ", error);
       }
     };
-
     fetchData();
   }, [userId]);
-
-  // Use this useEffect to trigger a page reload when 'profileUpdated' is true
   useEffect(() => {
     if (route.params?.profileUpdated) {
-      // Reload the page to get the latest data
       window.location.reload();
     }
   }, [route.params?.profileUpdated]);
-
   const handleUpdate = () => {
     updateDoc(doc(db, "users", userId), {
       name: name,
@@ -51,8 +42,6 @@ export default function Profile() {
     })
       .then(() => {
         showToast("User Details Updated Successfully");
-  
-        // Pass the updated user data as parameters to ProfileDetails
         navigation.navigate("ProfileDetails", {
           userId,
           updatedName: name,
@@ -64,8 +53,6 @@ export default function Profile() {
         console.error("Error updating user data: ", error);
       });
   };
-  
-
   const showToast = (message) => {
     Toast.show({
       type: "success",
@@ -74,7 +61,6 @@ export default function Profile() {
       visibilityTime: 3000,
     });
   };
-
   return (
     <View style={styles.container}>
       <Text style={styles.topicReg}>
@@ -108,7 +94,6 @@ export default function Profile() {
     </View>
   );
 }
-
 const styles = StyleSheet.create({
   container: {
     flex: 1,
