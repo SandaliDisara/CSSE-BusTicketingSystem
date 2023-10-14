@@ -69,7 +69,7 @@ export default function Profile() {
   return (
     <View>
       <TouchableOpacity onPress={() => navigation.navigate("ProfileDetails")}>
-        <Image source={require("../assets/bck.png")} style={{ width: 50, height: 50, marginTop: "2%", marginLeft: "2%" }} />
+        <Image source={require("../assets/bck.png")} style={{ width: 50, height: 50, marginTop: "8%", marginLeft: "3%" }} />
       </TouchableOpacity>
 
       <View style={styles.container}>
