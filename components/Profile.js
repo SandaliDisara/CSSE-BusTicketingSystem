@@ -1,9 +1,11 @@
 import React, { useState, useEffect } from "react";
-import { StyleSheet, Text, View, TextInput, Button } from "react-native";
+import { StyleSheet, Text, View, TextInput, Button, Image } from "react-native";
 import { collection, doc, getDoc, updateDoc } from "firebase/firestore";
 import { db } from "./config.jsx";
 import Toast from "react-native-toast-message";
 import { useNavigation, useRoute } from "@react-navigation/native";
+import back from "../assets/back.png";
+
 export default function Profile() {
   const [name, setName] = useState("");
   const [email, setEmail] = useState("");
@@ -61,6 +63,10 @@ export default function Profile() {
     });
   };
   return (
+    <View>
+        <View>
+        <Image source ={require("../assets/bck.png")} style={{ width:50, height:50, marginTop:"2%", marginLeft:"2%" }}/>
+        </View>
     <View style={styles.container}>
       <Text style={styles.topicReg}>
         <b>{name}</b>
@@ -90,6 +96,7 @@ export default function Profile() {
         </Text>
       </View>
       <Toast ref={(ref) => Toast.setRef(ref)} />
+    </View>
     </View>
   );
 }
