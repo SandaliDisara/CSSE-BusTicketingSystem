@@ -9,23 +9,30 @@ import Register from "../components/Register";
 import ProfileDetails from "../components/ProfileDetails";
 import Profile from "../components/Profile";
 import ViewProfile from "../components/ViewProfile";
-import { View } from "react-native";
+import LoginWeb from "../components/LoginWeb";
+
 const Stack = createNativeStackNavigator();
 export default function AppNavigator() {
   return (
     <NavigationContainer>
       <Stack.Navigator>
-      <Stack.Screen
+        <Stack.Screen
           name="Login"
           component={Login}
           options={{ headerShown: false }}
         />
-      <Stack.Screen
+        <Stack.Screen
+          name="LoginWeb"
+          component={LoginWeb}
+          options={{ headerShown: false }}
+        />
+
+        <Stack.Screen
           name="ProfileDetails"
           component={ProfileDetails}
           options={{ headerShown: false }}
         />
-      <Stack.Screen
+        <Stack.Screen
           name="ViewProfile"
           component={ViewProfile}
           options={{ headerShown: false }}
