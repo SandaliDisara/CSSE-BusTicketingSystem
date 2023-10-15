@@ -16,7 +16,7 @@ export default function Profile() {
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const userQuery = query(collection(db, "users"), where("name", "==", "MeharaS"));
+        const userQuery = query(collection(db, "users"), where("name", "==", "Mehara"));
         const querySnapshot = await getDocs(userQuery);
         if (!querySnapshot.empty) {
           const userData = querySnapshot.docs[0].data();

@@ -47,7 +47,7 @@ export default function ProfileDetails() {
   };
 
   const handleDelete = () => {
-    deleteDoc(doc(db, "users", "VsYdTYBamBmAb9I49STU"))
+    deleteDoc(doc(db, "users", "5vRaxfipR01QHQquwNhD"))
       .then(() => {
         console.log("Data deleted");
         navigation.navigate("Login");
