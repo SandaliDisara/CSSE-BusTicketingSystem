@@ -6,6 +6,10 @@ import BusList from "../components/BusList";
 import BusInfo from "../components/BusInfo";
 import Credit from "../components/MyCredit";
 import TopUpBtn from "../components/TopUsOptions";
+import Login from "../components/Login";
+import Register from "../components/Register";
+import ProfileDetails from "../components/ProfileDetails";
+import Profile from "../components/Profile";
 
 const Stack = createNativeStackNavigator();
 
@@ -14,10 +18,31 @@ export default function AppNavigator() {
     <NavigationContainer>
       <Stack.Navigator>
         <Stack.Screen name="Home" component={Home} />
+        <Stack.Screen
+          name="Login"
+          component={Login}
+          options={{ headerShown: false }}
+        />
+
         <Stack.Screen name="List of Busses" component={BusList} />
         <Stack.Screen name="Bus Information" component={BusInfo} />
         <Stack.Screen name="MyCredit" component={Credit} />
         <Stack.Screen name="TopUpBtn" component={TopUpBtn} />
+        <Stack.Screen
+          name="ProfileDetails"
+          component={ProfileDetails}
+          options={{ headerShown: false }}
+        />
+        <Stack.Screen
+          name="Register"
+          component={Register}
+          options={{ headerShown: false }}
+        />
+        <Stack.Screen
+          name="Profile"
+          component={Profile}
+          options={{ headerShown: false }}
+        />
       </Stack.Navigator>
     </NavigationContainer>
   );
