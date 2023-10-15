@@ -1,78 +1,103 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { View, Text, TouchableOpacity, Image, StyleSheet } from "react-native";
-import { ScrollView } from "react-native-gesture-handler"; // Import ScrollView
-import Icon from "react-native-vector-icons/FontAwesome";
+import { ScrollView } from "react-native-gesture-handler";
 import { db } from "./config";
+import { useNavigation } from "@react-navigation/native";
 
 export default function MyCredit() {
+  const [remainingCredit, setRemainingCredit] = useState(0);
+  const [creditHistory, setCreditHistory] = useState([]);
+  const navigation = useNavigation();
 
-    const dummyBusData = [
-        { number: "Bus 101", location: "B1, B2, T6, UB" },
-        { number: "Bus 102", location: "B4, N7, UB, B1" },
-        { number: "Bus 103", location: "B4, B8, T1" },
-        { number: "Bus 104", location: "B2, T5, B1, B3" },
-      ];
+  useEffect(() => {
+    // Fetch remaining credit from Firestore
+    const fetchRemainingCredit = async () => {
+      try {
+        const creditRef = db.collection("credits").doc("Q8ZqHR2BlZPnWcMHc4qQ"); // Replace with your Firestore document ID
+        const creditDoc = await creditRef.get();
+        if (creditDoc.exists) {
+          const creditData = creditDoc.data();
+          setRemainingCredit(creditData.amount);
+        } else {
+          console.log("Credit document not found in Firestore");
+        }
+      } catch (error) {
+        console.error("Error fetching credit from Firestore: NO DATA BOR  WTF", error);
+      }
+    };
 
-    
-  const [text1, setText1] = useState("");
-  const [text2, setText2] = useState("");
+    // Fetch credit history from Firestore
+    const fetchCreditHistory = async () => {
+      try {
+        const creditRef = db.collection("credits").doc("Q8ZqHR2BlZPnWcMHc4qQ"); // Replace with your Firestore document ID
+        const historyQuery = await creditRef.collection("topUpHistory").orderBy("date", "desc").get();
+
+        const historyData = [];
+        historyQuery.forEach((doc) => {
+          historyData.push({
+            id: doc.id,
+            amount: doc.data().amount,
+            date: doc.data().date.toDate(), // Convert Firestore timestamp to JavaScript Date
+          });
+        });
+
+        setCreditHistory(historyData);
+      } catch (error) {
+        console.error("Error fetching credit history from Firestore:", error);
+      }
+    };
+
+    // Call the functions to fetch remaining credit and credit history when the component mounts
+    fetchRemainingCredit();
+    fetchCreditHistory();
+  }, []);
+
+  const handleTopUpBtn = () => {
+    // Navigate to TopUpBtn
+    navigation.navigate("TopUpBtn");
+  };
 
   return (
     <View style={styles.container}>
       <View style={styles.marginContainer}>
         <View style={styles.smallRectangle}>
           <View style={styles.imageContainer}>
-            <Image
-              source={require("../assets/coins.png")}
-              style={{ width: 90, height: 90 }}
-            />
+            <Image source={require("../assets/coins.png")} style={{ width: 90, height: 90 }} />
           </View>
-         <View style={styles.textContainer}>
-            <Text style={styles.largeRectangleText}> 450</Text>
+          <View style={styles.textContainer}>
+            <Text style={styles.largeRectangleText}>{remainingCredit}</Text>
             <Text style={styles.mediumRectangleText}>Remaining Credits</Text>
-            <Text style={styles.smallRectangleText}> Last top up date - 10/10/2023</Text>
-          </View> 
+            <Text style={styles.smallRectangleText}>Last top-up date - 10/10/2023</Text>
+          </View>
         </View>
-        <TouchableOpacity style={styles.topUpButton}>
-            <Text style={styles.topUpText}>Top Up Credits</Text>
-          </TouchableOpacity>
-          <View style={styles.listTitle}>
+        <TouchableOpacity style={styles.topUpButton} onPress={handleTopUpBtn}>
+          <Text style={styles.topUpText}>Top Up Credits</Text>
+        </TouchableOpacity>
+        <View style={styles.listTitle}>
           <Text style={styles.listTitleText}>Credit History</Text>
         </View>
-          <ScrollView>
-          {dummyBusData.map((bus, index) => (
-            <View key={index}>
+        <ScrollView>
+          {creditHistory.map((entry, index) => (
+            <View key={entry.id}>
               <View style={styles.smallRectangle2}>
                 <View style={styles.leftColumn}>
                   <View style={styles.busInfo}>
-                    <Image
-                      source={require("../assets/bus.png")} // Replace with your bus icon source
-                      style={styles.icon}
-                    />
-                    <Text style={styles.busNumber}>{bus.number}</Text>
-                  </View>
-                  <View style={styles.locationInfo}>
-                    <Image
-                      source={require("../assets/location.png")} // Replace with your location icon source
-                      style={styles.icon}
-                    />
-                    <Text style={styles.locationText}>{bus.location}</Text>
+                    <Image source={require("../assets/coins.png")} style={styles.icon} />
+                    <Text style={styles.busNumber}>{entry.amount} credit - {entry.date.toDateString()}</Text>
                   </View>
                 </View>
-                <TouchableOpacity style={styles.bookButton}>
-                  <Text style={styles.bookText}>Book</Text>
-                </TouchableOpacity>
               </View>
-              <View style={styles.horizontalLine} />{" "}
-              {/* Thin horizontal line */}
+              <View style={styles.horizontalLine} />
             </View>
           ))}
         </ScrollView>
-        </View>
       </View>
-    
+    </View>
   );
 }
+
+// ... The rest of your styles remain the same ...
+
 
 const styles = StyleSheet.create({
     container: {
@@ -138,7 +163,7 @@ const styles = StyleSheet.create({
 
         },
         smallRectangle2: {
-            height: 80,
+            height: 40,
             width: "100%",
             backgroundColor: "white",
             marginTop: 20,

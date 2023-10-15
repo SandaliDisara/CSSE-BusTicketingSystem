@@ -23,6 +23,11 @@ export default function Home() {
     navigation.navigate("List of Busses", { from, to, userName });
   };
 
+  const handleCredit = () => {
+    // Navigate to Credit
+    navigation.navigate("MyCredit");
+  };
+
   return (
     <View style={styles.container}>
       <CommonHeader userName={userName} />
@@ -52,8 +57,8 @@ export default function Home() {
               style={{ width: 120, height: 120 }}
             />
           </View>
-          <View style={styles.textContainer}>
-            <Text style={styles.smallRectangleText}>My Credit</Text>
+          <View style={styles.textContainer} >
+            <Text style={styles.smallRectangleText} onPress={handleCredit}>My Credit</Text>
             <Text style={styles.smallRectanglePara}>
               Check your credit {"\n"}balance and top up
             </Text>
