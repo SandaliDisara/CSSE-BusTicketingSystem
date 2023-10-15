@@ -4,6 +4,8 @@ import { createNativeStackNavigator } from "@react-navigation/native-stack";
 import Home from "../components/Home";
 import BusList from "../components/BusList";
 import BusInfo from "../components/BusInfo";
+import Credit from "../components/MyCredit";
+import TopUpBtn from "../components/TopUsOptions";
 import Login from "../components/Login";
 import Register from "../components/Register";
 import ProfileDetails from "../components/ProfileDetails";
@@ -21,12 +23,16 @@ export default function AppNavigator() {
           component={Login}
           options={{ headerShown: false }}
         />
+        <Stack.Screen name="MyCredit" component={Credit} />
         <Stack.Screen
           name="LoginWeb"
           component={LoginWeb}
           options={{ headerShown: false }}
         />
-
+        <Stack.Screen name="Home" component={Home} />
+        <Stack.Screen name="List of Busses" component={BusList} />
+        <Stack.Screen name="Bus Information" component={BusInfo} />
+        <Stack.Screen name="TopUpBtn" component={TopUpBtn} />
         <Stack.Screen
           name="ProfileDetails"
           component={ProfileDetails}
@@ -37,11 +43,6 @@ export default function AppNavigator() {
           component={ViewProfile}
           options={{ headerShown: false }}
         />
-
-        <Stack.Screen name="Home" component={Home} />
-        <Stack.Screen name="List of Busses" component={BusList} />
-        <Stack.Screen name="Bus Information" component={BusInfo} />
-
         <Stack.Screen
           name="Register"
           component={Register}
