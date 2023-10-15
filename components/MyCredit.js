@@ -3,12 +3,17 @@ import { View, Text, TouchableOpacity, Image, StyleSheet } from "react-native";
 import { ScrollView } from "react-native-gesture-handler";
 import { db } from "./config";
 import { useNavigation } from "@react-navigation/native";
-import { doc, getDoc } from "firebase/firestore";
+import { doc, getDocs, collection, getDoc } from "firebase/firestore";
+import { Timestamp } from "firebase/firestore"; 
+
+
 
 export default function MyCredit() {
   const navigation = useNavigation();
   const [creditAmount, setCreditAmount] = useState(null);
   const [lastTopUpDate, setLastTopUpDate] = useState(null);
+  const [creditHistory, setCreditHistory] = useState([]);
+
 
   const handleTopUpBtn = () => {
     // Navigate to TopUpBtn
@@ -32,6 +37,28 @@ export default function MyCredit() {
     };
 
     fetchData();
+  }, []);
+
+  useEffect(() => {
+    // Fetch credit history data from Firestore
+    const fetchCreditHistory = async () => {
+      try {
+        const creditDocRef = doc(db, "credits", "Q8ZqHR2BlZPnWcMHc4qQ"); // Replace with your Firestore document ID
+        const historyCollectionRef = collection(creditDocRef, "topUpHistory");
+        const historyQuerySnapshot = await getDocs(historyCollectionRef);
+
+        const historyData = [];
+        historyQuerySnapshot.forEach((doc) => {
+          historyData.push(doc.data());
+        });
+
+        setCreditHistory(historyData);
+      } catch (error) {
+        console.error("Error fetching credit history from Firestore: ", error);
+      }
+    };
+
+    fetchCreditHistory();
   }, []);
 
   return (
@@ -58,6 +85,25 @@ export default function MyCredit() {
         <View style={styles.listTitle}>
           <Text style={styles.listTitleText}>Credit History</Text>
         </View>
+        <ScrollView>
+        {creditHistory.map((credit, index) => (
+          <View key={index}>
+            <View style={styles.smallRectangle}>
+              <View style={styles.leftColumn}>
+                <View style={styles.busInfo}>
+                  <Text style={styles.busNumber}>{credit.amount} Credits</Text>
+                </View>
+                <View style={styles.locationInfo}>
+                  <Text style={styles.locationText}>
+                    {credit.date?.toDate()?.toLocaleString() || "Invalid Date"}
+                  </Text>
+                </View>
+              </View>
+            </View>
+            <View style={styles.horizontalLine} />
+          </View>
+        ))}
+        </ScrollView>
       </View>
     </View>
   );
