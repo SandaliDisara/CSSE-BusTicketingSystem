@@ -17,6 +17,7 @@ export default function AppNavigator() {
   return (
     <NavigationContainer>
       <Stack.Navigator>
+        <Stack.Screen name="MyCredit" component={Credit} />
         <Stack.Screen
           name="Login"
           component={Login}
@@ -26,7 +27,7 @@ export default function AppNavigator() {
 
         <Stack.Screen name="List of Busses" component={BusList} />
         <Stack.Screen name="Bus Information" component={BusInfo} />
-        <Stack.Screen name="MyCredit" component={Credit} />
+
         <Stack.Screen name="TopUpBtn" component={TopUpBtn} />
         <Stack.Screen
           name="ProfileDetails"

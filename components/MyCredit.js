@@ -3,71 +3,53 @@ import { View, Text, TouchableOpacity, Image, StyleSheet } from "react-native";
 import { ScrollView } from "react-native-gesture-handler";
 import { db } from "./config";
 import { useNavigation } from "@react-navigation/native";
+import { doc, getDoc } from "firebase/firestore";
 
 export default function MyCredit() {
-  const [remainingCredit, setRemainingCredit] = useState(0);
-  const [creditHistory, setCreditHistory] = useState([]);
   const navigation = useNavigation();
-
-  useEffect(() => {
-    // Fetch remaining credit from Firestore
-    const fetchRemainingCredit = async () => {
-      try {
-        const creditRef = db.collection("credits").doc("Q8ZqHR2BlZPnWcMHc4qQ"); // Replace with your Firestore document ID
-        const creditDoc = await creditRef.get();
-        if (creditDoc.exists) {
-          const creditData = creditDoc.data();
-          setRemainingCredit(creditData.amount);
-        } else {
-          console.log("Credit document not found in Firestore");
-        }
-      } catch (error) {
-        console.error("Error fetching credit from Firestore: NO DATA BOR  WTF", error);
-      }
-    };
-
-    // Fetch credit history from Firestore
-    const fetchCreditHistory = async () => {
-      try {
-        const creditRef = db.collection("credits").doc("Q8ZqHR2BlZPnWcMHc4qQ"); // Replace with your Firestore document ID
-        const historyQuery = await creditRef.collection("topUpHistory").orderBy("date", "desc").get();
-
-        const historyData = [];
-        historyQuery.forEach((doc) => {
-          historyData.push({
-            id: doc.id,
-            amount: doc.data().amount,
-            date: doc.data().date.toDate(), // Convert Firestore timestamp to JavaScript Date
-          });
-        });
-
-        setCreditHistory(historyData);
-      } catch (error) {
-        console.error("Error fetching credit history from Firestore:", error);
-      }
-    };
-
-    // Call the functions to fetch remaining credit and credit history when the component mounts
-    fetchRemainingCredit();
-    fetchCreditHistory();
-  }, []);
+  const [creditAmount, setCreditAmount] = useState(null);
+  const [lastTopUpDate, setLastTopUpDate] = useState(null);
 
   const handleTopUpBtn = () => {
     // Navigate to TopUpBtn
     navigation.navigate("TopUpBtn");
   };
 
+  useEffect(() => {
+    const fetchData = async () => {
+      try {
+        const creditDocRef = doc(db, "credits", "Q8ZqHR2BlZPnWcMHc4qQ");
+        const creditDocSnapshot = await getDoc(creditDocRef);
+
+        if (creditDocSnapshot.exists) {
+          const data = creditDocSnapshot.data();
+          setCreditAmount(data.amount);
+          setLastTopUpDate(data.date);
+        }
+      } catch (error) {
+        console.error("Error fetching data: ", error);
+      }
+    };
+
+    fetchData();
+  }, []);
+
   return (
     <View style={styles.container}>
       <View style={styles.marginContainer}>
         <View style={styles.smallRectangle}>
           <View style={styles.imageContainer}>
-            <Image source={require("../assets/coins.png")} style={{ width: 90, height: 90 }} />
+            <Image
+              source={require("../assets/coins.png")}
+              style={{ width: 90, height: 90 }}
+            />
           </View>
           <View style={styles.textContainer}>
-            <Text style={styles.largeRectangleText}>{remainingCredit}</Text>
+            <Text style={styles.largeRectangleText}>{creditAmount}</Text>
             <Text style={styles.mediumRectangleText}>Remaining Credits</Text>
-            <Text style={styles.smallRectangleText}>Last top-up date - 10/10/2023</Text>
+            <Text style={styles.smallRectangleText}>
+              Last top-up date - {lastTopUpDate}
+            </Text>
           </View>
         </View>
         <TouchableOpacity style={styles.topUpButton} onPress={handleTopUpBtn}>
@@ -76,186 +58,160 @@ export default function MyCredit() {
         <View style={styles.listTitle}>
           <Text style={styles.listTitleText}>Credit History</Text>
         </View>
-        <ScrollView>
-          {creditHistory.map((entry, index) => (
-            <View key={entry.id}>
-              <View style={styles.smallRectangle2}>
-                <View style={styles.leftColumn}>
-                  <View style={styles.busInfo}>
-                    <Image source={require("../assets/coins.png")} style={styles.icon} />
-                    <Text style={styles.busNumber}>{entry.amount} credit - {entry.date.toDateString()}</Text>
-                  </View>
-                </View>
-              </View>
-              <View style={styles.horizontalLine} />
-            </View>
-          ))}
-        </ScrollView>
       </View>
     </View>
   );
 }
 
-// ... The rest of your styles remain the same ...
-
-
 const styles = StyleSheet.create({
-    container: {
-        marginTop: 40,
-        flex: 1,
-      },
-      marginContainer: {
-        marginHorizontal: 20,
-      },
-      rectangle: {
-        padding: 20,
-        backgroundColor: "black", // Adjust as needed
-        borderWidth: 1,
-        borderColor: "#E2E0E0",
+  container: {
+    marginTop: 40,
+    flex: 1,
+  },
+  marginContainer: {
+    marginHorizontal: 20,
+  },
+  rectangle: {
+    padding: 20,
+    backgroundColor: "black", // Adjust as needed
+    borderWidth: 1,
+    borderColor: "#E2E0E0",
+  },
+  creditHeader: {
+    flexDirection: "row",
+    alignItems: "center",
+  },
+  creditText: {
+    fontSize: 18,
+    color: "white", // Adjust the color as needed
+  },
+  creditValue: {
+    fontSize: 24,
+    fontWeight: "500",
+    color: "white",
+  },
+  lastEditedDate: {
+    fontSize: 14,
+    color: "lightgray",
+  },
+  topUpButton: {
+    backgroundColor: "black",
+    borderRadius: 10,
+    height: 60,
+    width: "100%",
+    alignItems: "center",
+    justifyContent: "center",
+    alignSelf: "center",
+    marginTop: 20,
+  },
+  topUpText: {
+    color: "white",
+    fontSize: 18,
+  },
+  creditHistory: {
+    marginTop: 50,
+  },
+  historyEntry: {
+    fontSize: 16,
+  },
 
-      },
-      creditHeader: {
-        flexDirection: "row",
-        alignItems: "center",
-      },
-      creditText: {
-        fontSize: 18,
-        color: "white", // Adjust the color as needed
-      },
-      creditValue: {
-        fontSize: 24,
-        fontWeight: "500",
-        color: "white",
-      },
-      lastEditedDate: {
-        fontSize: 14,
-        color: "lightgray",
-      },
-      topUpButton: {
-        backgroundColor: "black",
-        borderRadius: 10,
-        height: 60,
-        width: "100%",
-        alignItems: "center",
-        justifyContent: "center",
-        alignSelf: "center",
-        marginTop: 20,
+  smallRectangle: {
+    height: 140,
+    width: "100%",
+    backgroundColor: "black",
+    marginTop: 20,
+    borderRadius: 10,
+    flexDirection: "row",
+  },
+  smallRectangle2: {
+    height: 40,
+    width: "100%",
+    backgroundColor: "white",
+    marginTop: 20,
+    borderRadius: 10,
+    flexDirection: "row",
+  },
+  listTitle: {
+    marginTop: 20,
+  },
+  listTitleText: {
+    fontSize: 20,
+    fontWeight: "bold",
+  },
+  imageContainer: {
+    flex: 1,
+    justifyContent: "center",
+    alignItems: "center",
+    marginLeft: 40, // Adjusted margin
+  },
+  textContainer: {
+    flex: 3,
+    justifyContent: "center",
+    marginLeft: 20, // Adjusted margin
+  },
+  largeRectangleText: {
+    fontSize: 32,
+    color: "white",
+    fontWeight: "bold",
+    textAlign: "center",
+  },
+  mediumRectangleText: {
+    fontSize: 16,
+    color: "white",
+    fontWeight: "bold",
+    textAlign: "center",
+  },
+  smallRectangleText: {
+    fontSize: 14,
+    color: "lightgray",
+    textAlign: "center",
+  },
 
-      },
-      topUpText: {
-        color: "white",
-        fontSize: 18,
-      },
-      creditHistory: {
-        marginTop: 50,
-      },
-      historyEntry: {
-        fontSize: 16,
-      },
-      
-        smallRectangle: {
-          height: 140,
-          width: "100%",
-          backgroundColor: "black",
-          marginTop: 20,
-          borderRadius: 10,
-          flexDirection: "row",
-
-        },
-        smallRectangle2: {
-            height: 40,
-            width: "100%",
-            backgroundColor: "white",
-            marginTop: 20,
-            borderRadius: 10,
-            flexDirection: "row",
-  
-          },
-          listTitle: {
-            marginTop: 20,
-          },
-          listTitleText: {
-            fontSize: 20,
-            fontWeight: "bold",
-          },
-        imageContainer: {
-          flex: 1,
-          justifyContent: "center",
-          alignItems: "center",
-          marginLeft: 40, // Adjusted margin
-        },
-        textContainer: {
-          flex: 3,
-          justifyContent: "center",
-          marginLeft: 20, // Adjusted margin
-        },
-        largeRectangleText: {
-          fontSize: 32,
-          color: "white",
-          fontWeight: "bold",
-          textAlign: "center",
-        },
-        mediumRectangleText: {
-          fontSize: 16,
-          color: "white",
-          fontWeight: "bold",
-          textAlign: "center",
-        },
-        smallRectangleText: {
-          fontSize: 14,
-          color: "lightgray",
-          textAlign: "center",
-        },
-
-        leftColumn: {
-            flexDirection: "column",
-            flex: 1,
-          },
-          busInfo: {
-            flexDirection: "row",
-            alignItems: "center",
-            marginBottom: 20,
-          },
-          busNumber: {
-            fontSize: 16,
-            color: "black",
-            fontWeight: "500",
-            marginLeft: 10,
-          },
-          locationInfo: {
-            flexDirection: "row",
-            alignItems: "center",
-          },
-          locationText: {
-            fontSize: 16,
-            fontWeight: "500",
-            color: "black",
-            marginLeft: 10,
-          },
-          icon: {
-            width: 20,
-            height: 20,
-          },
-          bookButton: {
-            backgroundColor: "black",
-            width: 100,
-            height: 35,
-            borderRadius: 15,
-            alignItems: "center",
-            justifyContent: "center",
-          },
-          bookText: {
-            color: "white",
-            fontSize: 14,
-            fontWeight: "500",
-          },
-          horizontalLine: {
-            borderBottomColor: "#989898",
-            borderBottomWidth: 1,
-            marginTop: 15,
-          },
-      })
-      
-      
-      
-
+  leftColumn: {
+    flexDirection: "column",
+    flex: 1,
+  },
+  busInfo: {
+    flexDirection: "row",
+    alignItems: "center",
+    marginBottom: 20,
+  },
+  busNumber: {
+    fontSize: 16,
+    color: "black",
+    fontWeight: "500",
+    marginLeft: 10,
+  },
+  locationInfo: {
+    flexDirection: "row",
+    alignItems: "center",
+  },
+  locationText: {
+    fontSize: 16,
+    fontWeight: "500",
+    color: "black",
+    marginLeft: 10,
+  },
+  icon: {
+    width: 20,
+    height: 20,
+  },
+  bookButton: {
+    backgroundColor: "black",
+    width: 100,
+    height: 35,
+    borderRadius: 15,
+    alignItems: "center",
+    justifyContent: "center",
+  },
+  bookText: {
+    color: "white",
+    fontSize: 14,
+    fontWeight: "500",
+  },
+  horizontalLine: {
+    borderBottomColor: "#989898",
+    borderBottomWidth: 1,
+    marginTop: 15,
+  },
+});
