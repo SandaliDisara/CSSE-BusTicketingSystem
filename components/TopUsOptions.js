@@ -8,33 +8,35 @@ import {
 } from "react-native";
 import { db } from "./config"; // Import Firestore and FieldValue
 import { doc, updateDoc, collection, addDoc } from "firebase/firestore";
-import { serverTimestamp } from "firebase/firestore"; // This import is used for server timestamps
+import MyCredit from "./MyCredit";
 
 
 
 
-export default function TopUpOptions() {
 
+export default function TopUpOptions({ creditAmount, updateCreditAmount }) {
   const [topUpAmount, setTopUpAmount] = useState("");
 
-  const handleTopUp = async (amount) => {
+  const handleTopUp = async (creditAmount) => {
     try {
-      const newAmount = parseInt(topUpAmount) + amount;
-    
-      // Update the remaining credit amount in Firestore
+      const parsedAmount = parseInt(topUpAmount) || 0;
+      const newAmount = parseInt(topUpAmount) + creditAmount;
+
+      const customDate = "12-12-2023";
+
       const creditDocRef = doc(db, "credits", "Q8ZqHR2BlZPnWcMHc4qQ");
       await updateDoc(creditDocRef, {
-        amount: newAmount,
+        creditAmount: newAmount,
       });
 
-      // Record the top-up entry with the current date
       const topUpHistoryCollectionRef = collection(creditDocRef, "topUpHistory");
       await addDoc(topUpHistoryCollectionRef, {
         amount: amount,
-        date: serverTimestamp(),
+        date: customDate,
       });
 
-      // Clear the input field
+      console.log("New Amount:", newAmount);
+      updateCreditAmount(newAmount); // This function should be defined in the parent component
       setTopUpAmount("");
     } catch (error) {
       console.error("Error handling top-up:", error);
@@ -79,6 +81,8 @@ export default function TopUpOptions() {
           <Text style={styles.topUpButtonText} >Top Up Credit</Text>
         </TouchableOpacity>
       </View>
+      <MyCredit creditAmount={creditAmount} updateCreditAmount={updateCreditAmount} />
+
     </View>
   );
 }

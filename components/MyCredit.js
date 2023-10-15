@@ -4,25 +4,28 @@ import { ScrollView } from "react-native-gesture-handler";
 import { db } from "./config";
 import { useNavigation } from "@react-navigation/native";
 import { doc, getDocs, collection, getDoc } from "firebase/firestore";
-import { Timestamp } from "firebase/firestore"; 
 
 
-
-export default function MyCredit() {
+export default function MyCredit({ creditAmount, updateCreditAmount }) {
   const navigation = useNavigation();
   const [creditAmount, setCreditAmount] = useState(null);
   const [lastTopUpDate, setLastTopUpDate] = useState(null);
   const [creditHistory, setCreditHistory] = useState([]);
 
+  const updateCreditAmount = (newAmount) => {
+    setCreditAmount(newAmount);
+  };
 
   const handleTopUpBtn = () => {
     // Navigate to TopUpBtn
     navigation.navigate("TopUpBtn");
   };
 
+
   useEffect(() => {
     const fetchData = async () => {
       try {
+        // Fetch the main credit data
         const creditDocRef = doc(db, "credits", "Q8ZqHR2BlZPnWcMHc4qQ");
         const creditDocSnapshot = await getDoc(creditDocRef);
 
@@ -72,7 +75,7 @@ export default function MyCredit() {
             />
           </View>
           <View style={styles.textContainer}>
-            <Text style={styles.largeRectangleText}>{creditAmount}</Text>
+            <Text style={styles.largeRectangleText}>{newAmount}</Text>
             <Text style={styles.mediumRectangleText}>Remaining Credits</Text>
             <Text style={styles.smallRectangleText}>
               Last top-up date - {lastTopUpDate}
@@ -86,23 +89,20 @@ export default function MyCredit() {
           <Text style={styles.listTitleText}>Credit History</Text>
         </View>
         <ScrollView>
-        {creditHistory.map((credit, index) => (
-          <View key={index}>
-            <View style={styles.smallRectangle}>
-              <View style={styles.leftColumn}>
-                <View style={styles.busInfo}>
-                  <Text style={styles.busNumber}>{credit.amount} Credits</Text>
-                </View>
-                <View style={styles.locationInfo}>
-                  <Text style={styles.locationText}>
-                    {credit.date?.toDate()?.toLocaleString() || "Invalid Date"}
-                  </Text>
+          {creditHistory.map((credit, index) => (
+            <View key={index}>
+              <View style={styles.smallRectangle2}>
+                <View style={styles.leftColumn}>
+                  <View style={styles.busInfo}>
+                    <Text style={styles.busNumber}>      {credit.amount} Credits                       </Text>  
+                    <Text style={styles.locationText}>{credit.date}</Text>
+                  </View>
+                  
                 </View>
               </View>
+              <View style={styles.horizontalLine} />
             </View>
-            <View style={styles.horizontalLine} />
-          </View>
-        ))}
+          ))}
         </ScrollView>
       </View>
     </View>
@@ -170,7 +170,7 @@ const styles = StyleSheet.create({
     flexDirection: "row",
   },
   smallRectangle2: {
-    height: 40,
+    height: 50,
     width: "100%",
     backgroundColor: "white",
     marginTop: 20,
@@ -220,7 +220,8 @@ const styles = StyleSheet.create({
   busInfo: {
     flexDirection: "row",
     alignItems: "center",
-    marginBottom: 20,
+    marginBottom: 10,
+    marginTop: 10,
   },
   busNumber: {
     fontSize: 16,
