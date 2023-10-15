@@ -10,31 +10,31 @@ import ProfileDetails from "../components/ProfileDetails";
 import Profile from "../components/Profile";
 import ViewProfile from "../components/ViewProfile";
 import { View } from "react-native";
-
 const Stack = createNativeStackNavigator();
-
 export default function AppNavigator() {
   return (
     <NavigationContainer>
       <Stack.Navigator>
-      <Stack.Screen name="Home" component={Home} />
-        <Stack.Screen
-          name="ViewProfile"
-          component={ViewProfile}
-          options={{ headerShown: false }}
-        />
-        <Stack.Screen
+      <Stack.Screen
           name="Login"
           component={Login}
           options={{ headerShown: false }}
         />
-        <Stack.Screen name="List of Busses" component={BusList} />
-        <Stack.Screen name="Bus Information" component={BusInfo} />
-        <Stack.Screen
+      <Stack.Screen
           name="ProfileDetails"
           component={ProfileDetails}
           options={{ headerShown: false }}
         />
+      <Stack.Screen
+          name="ViewProfile"
+          component={ViewProfile}
+          options={{ headerShown: false }}
+        />
+
+        <Stack.Screen name="Home" component={Home} />
+        <Stack.Screen name="List of Busses" component={BusList} />
+        <Stack.Screen name="Bus Information" component={BusInfo} />
+
         <Stack.Screen
           name="Register"
           component={Register}

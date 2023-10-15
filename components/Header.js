@@ -4,7 +4,7 @@ import { FontAwesome } from "@expo/vector-icons";
 import { useNavigation } from '@react-navigation/native';
 import { styles } from "../css/HeaderStyles";
 
-export default function CommonHeader({ userName }) {
+export default function CommonHeader({ userName, userId }) {
   const [menuVisible, setMenuVisible] = useState(false);
   const navigation = useNavigation();
   const toggleMenu = () => {
@@ -39,7 +39,7 @@ function MenuSlider({ visible, closeMenu, navigation }) {
         onPress={closeMenu}
       >
         <View style={styles.menu}>
-          <TouchableOpacity onPress={() => navigation.navigate("ViewProfile")}>
+          <TouchableOpacity onPress={() => navigation.navigate("ProfileDetails")}>
             <View style={styles.menuItemContainer}>
               <FontAwesome name="user" size={35} color="white" />
               <Text style={styles.menuItem}>Profile</Text>
