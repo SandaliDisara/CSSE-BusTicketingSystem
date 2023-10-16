@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from "react";
 import { StyleSheet, Text, View, TextInput, Button, Image, TouchableOpacity } from "react-native";
-import { collection, doc, getDoc, updateDoc } from "firebase/firestore";
+import { collection, query, where, getDocs, doc, getDoc, updateDoc } from "firebase/firestore";
 import { db } from "./config.jsx";
 import Toast from "react-native-toast-message";
 import { useNavigation, useRoute } from "@react-navigation/native";
@@ -16,10 +16,10 @@ export default function Profile() {
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const docRef = doc(db, "users", userId);
-        const docSnap = await getDoc(docRef);
-        if (docSnap.exists()) {
-          const userData = docSnap.data();
+        const userQuery = query(collection(db, "users"), where("name", "==", "Mehara"));
+        const querySnapshot = await getDocs(userQuery);
+        if (!querySnapshot.empty) {
+          const userData = querySnapshot.docs[0].data();
           setName(userData.name);
           setEmail(userData.email);
           setPhone(userData.phone);
@@ -38,7 +38,7 @@ export default function Profile() {
   }, [route.params?.profileUpdated]);
 
   const handleUpdate = () => {
-    updateDoc(doc(db, "users", userId), {
+    updateDoc(doc(db, "users", "5vRaxfipR01QHQquwNhD"), {
       name: name,
       email: email,
       phone: phone,
@@ -71,17 +71,18 @@ export default function Profile() {
       <TouchableOpacity onPress={() => navigation.navigate("ProfileDetails")}>
         <Image source={require("../assets/bck.png")} style={{ width: 50, height: 50, marginTop: "8%", marginLeft: "3%" }} />
       </TouchableOpacity>
-
       <View style={styles.container}>
         <Text style={styles.topicReg}>
           <b>{name}</b>
-        </Text><br /> <br /> <br /> <br /><br />
+        </Text>
+        <br /> <br /> <br /> <br /><br />
         <TextInput
           value={name}
           placeholder="Name"
           onChangeText={setName}
           style={[styles.input, styles.inputWidth]}
-        /> <br /> <br />
+        />
+        <br /> <br />
         <TextInput
           value={email}
           placeholder="Email"
@@ -94,7 +95,8 @@ export default function Profile() {
           placeholder="Phone Number"
           onChangeText={setPhone}
           style={[styles.input, styles.inputWidth]}
-        /> <br /> <br />
+        />
+        <br /> <br />
         <View style={[styles.button, styles.inputWidth]}>
           <Text style={styles.buttonText} onPress={handleUpdate}>
             <b>Save Changes</b>
