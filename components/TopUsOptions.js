@@ -6,31 +6,87 @@ import {
   TextInput,
   TouchableOpacity,
 } from "react-native";
+import { db } from "./config"; // Import Firestore and FieldValue
+import { doc, updateDoc, collection, addDoc, getDoc } from "firebase/firestore";
+
+
 
 export default function TopUpOptions() {
   const [topUpAmount, setTopUpAmount] = useState("");
 
-  const handleTopUp = () => {
-    // Handle top-up logic here
-    console.log("Top-up amount:", topUpAmount);
-    // You can add further logic here, such as making an API request.
-  };
+  async function fetchCreditAmount() {
+    try {
+      
+      const creditDocRef = doc(db, "credits", "Q8ZqHR2BlZPnWcMHc4qQ");
+  
+      // Fetch the document data
+      const creditDocSnapshot = await getDoc(creditDocRef);
+  
+      if (creditDocSnapshot.exists()) {
+        const creditData = creditDocSnapshot.data();
+        const amount = creditData.amount;
+        return amount;
+      } else {
+        // Handle the case where the document doesn't exist
+        return null;
+      }
+      console.log("Amount:", amount);
+    } catch (error) {
+      console.error("Error fetching credit amount:", error);
+      return null;
+    }
+  }
+
+  const handleTopUp = async (amount) => {
+    try {
+      const parsedAmount = parseInt(fetchCreditAmount()) || 0;
+      const newAmount = parseInt(fetchCreditAmount()) + amount;
+
+      const customDate = "12-12-2023";
+
+      const creditDocRef = doc(db, "credits", "Q8ZqHR2BlZPnWcMHc4qQ");
+      await updateDoc(creditDocRef, {
+        creditAmount: amount,
+      });
+
+      const topUpHistoryCollectionRef = collection(creditDocRef, "topUpHistory");
+      await addDoc(topUpHistoryCollectionRef, {
+        amount: amount,
+        date: customDate,
+      });
+      console.log("Added Amount:", amount);
+      console.log(fetchCreditAmount());
+      console.log("New Amount:", newAmount);
+      updateCreditAmount(newAmount); // This function should be defined in the parent component
+      setTopUpAmount("");
+    } catch (error) {
+      console.error("Error handling top-up:", error);
+    }
+  }
+
+
 
   return (
     <View style={styles.container}>
       <View style={styles.marginContainer}>
+      <TouchableOpacity onPress={() => handleTopUp(100)}>
         <View style={styles.optionRecs}>
           <Text style={styles.leftText}>100 Credits</Text>
           <Text style={styles.rightText}>Rs. 500</Text>
         </View>
+      </TouchableOpacity>
+      <TouchableOpacity onPress={() => handleTopUp(250)}>
         <View style={styles.optionRecs}>
           <Text style={styles.leftText}>250 Credits</Text>
           <Text style={styles.rightText}>Rs. 750</Text>
         </View>
+      </TouchableOpacity>
+      <TouchableOpacity onPress={() => handleTopUp(500)}>
         <View style={styles.optionRecs}>
           <Text style={styles.leftText}>500 Credits</Text>
           <Text style={styles.rightText}>Rs. 1200</Text>
         </View>
+      </TouchableOpacity>
         <View style={styles.orContainer}>
           <Text style={styles.orText}>OR</Text>
         </View>
@@ -42,10 +98,12 @@ export default function TopUpOptions() {
           value={topUpAmount}
           onChangeText={(text) => setTopUpAmount(text)}
         />
-        <TouchableOpacity style={styles.topUpButton} onPress={handleTopUp}>
-          <Text style={styles.topUpButtonText}>Top Up Credit</Text>
+        <TouchableOpacity style={styles.topUpButton}>
+          <Text style={styles.topUpButtonText} >Top Up Credit</Text>
         </TouchableOpacity>
       </View>
+
+
     </View>
   );
 }
