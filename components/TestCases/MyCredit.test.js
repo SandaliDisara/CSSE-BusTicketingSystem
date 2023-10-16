@@ -1,6 +1,6 @@
 import React from 'react';
 import { render, waitFor, fireEvent } from '@testing-library/react-native';
-import MyCredit from './MyCredit';
+import MyCredit from '../MyCredit';
 
 // Mock the necessary dependencies and libraries
 jest.mock('@react-navigation/native', () => ({
@@ -35,7 +35,7 @@ describe('MyCredit', () => {
       get: getDocMock,
     });
     // Import your component after mocking to use the mocked functions
-    jest.mock('./config', () => ({
+    jest.mock('../config', () => ({
       db: {
         collection: jest.fn(() => ({
           doc: docMock,
