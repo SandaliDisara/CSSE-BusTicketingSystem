@@ -1,16 +1,18 @@
 import React, { useState, useEffect } from "react";
 import { StyleSheet, Text, View, TextInput, Button } from "react-native";
 import { collection, doc, getDocs, query, where } from "firebase/firestore";
-import { db } from "./config.jsx";
+import { db } from "./config.jsx"; // Importing a database connection
 import { useNavigation } from '@react-navigation/native';
-import Toast from 'react-native-toast-message';
-import { styles } from "../css/LoginStyles"
+import Toast from 'react-native-toast-message'; // Importing a toast message component
+import { styles } from "../css/LoginStyles" // Importing CSS styles
 
 export default function Login() {
-  const [email, setEmail] = useState("");
-  const [password, setPassword] = useState("");
-  const [userData, setUserData] = useState(null);
-  const navigation = useNavigation();
+  const [email, setEmail] = useState(""); // State for email input
+  const [password, setPassword] = useState(""); // State for password input
+  const [userData, setUserData] = useState(null); // State to store user data
+  const navigation = useNavigation(); // Accessing navigation for screen transition
+
+  // Function to show a toast message
   const showToast = (message) => {
     Toast.show({
       type: "success",
@@ -19,27 +21,34 @@ export default function Login() {
       timeout: "3s",
     });
   };
+
+  // Function to handle the login process
   const handleLogin = async () => {
     const q = query(
-      collection(db, "users"),
-      where("email", "==", email),
-      where("password", "==", password)
+      collection(db, "users"), // Specify the collection in the database
+      where("email", "==", email), // Filter users where email matches
+      where("password", "==", password) // Filter users where password matches
     );
-    const querySnapshot = await getDocs(q);
+
+    const querySnapshot = await getDocs(q); // Execute the query
+
     if (!querySnapshot.empty) {
       const userDoc = querySnapshot.docs[0];
-      const userData = userDoc.data();
+      const userData = userDoc.data(); // Get user data
       console.log("User Data:", userData);
-      const userId = userDoc.id;
+      const userId = userDoc.id; // Get the user's document ID
       console.log("Document ID:", userId);
-    navigation.navigate("Home", { userName: userData.name });
+
+      // Navigate to the "Home" screen and pass the user's name as a parameter
+      navigation.navigate("Home", { userName: userData.name });
     } else {
       console.log("User not found.");
-      showToast("Invalid Email or Password !");
+      showToast("Invalid Email or Password !"); // Show a toast message for invalid login
       setEmail("");
       setPassword("");
     }
   };
+
   return (
     <View style={styles.container}>
       <Text style={[styles.topicRegT, { opacity: 0.5 }]}>ticketX</Text>
@@ -78,12 +87,12 @@ export default function Login() {
       <Text style={styles.whiteText}>Don't have an account?</Text>
       <br />
       <Text
-        onPress={() => navigation.navigate("Register")}
+        onPress={() => navigation.navigate("Register")} // Navigate to the "Register" screen
         style={styles.whiteText}
       >
         <b>Register</b>
       </Text>
-      <Toast ref={(ref) => Toast.setRef(ref)} />
+      <Toast ref={(ref) => Toast.setRef(ref)} /> {/* Set the reference for the toast component */}
       {userData && (
         <View>
           <Text>Login Successfully</Text>

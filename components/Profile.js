@@ -1,25 +1,25 @@
 import React, { useState, useEffect } from "react";
 import { StyleSheet, Text, View, TextInput, Button, Image, TouchableOpacity } from "react-native";
 import { collection, query, where, getDocs, doc, getDoc, updateDoc } from "firebase/firestore";
-import { db } from "./config.jsx";
-import Toast from "react-native-toast-message";
+import { db } from "./config.jsx"; // Importing a database connection
+import Toast from "react-native-toast-message"; // Importing a toast message component
 import { useNavigation, useRoute } from "@react-navigation/native";
 
 export default function Profile() {
-  const [name, setName] = useState("");
-  const [email, setEmail] = useState("");
-  const [phone, setPhone] = useState("");
-  const navigation = useNavigation();
-  const route = useRoute();
-  const userId = route.params?.userId;
+  const [name, setName] = useState(""); // State to store user's name
+  const [email, setEmail] = useState(""); // State to store user's email
+  const [phone, setPhone] = useState(""); // State to store user's phone number
+  const navigation = useNavigation(); // Accessing navigation for screen transition
+  const route = useRoute(); // Accessing route information to get userId
 
+  // Fetch user data from the database based on name
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const userQuery = query(collection(db, "users"), where("name", "==", "Mehara"));
+        const userQuery = query(collection(db, "users"), where("name", "==", "Mehara")); // Query to find the user by name
         const querySnapshot = await getDocs(userQuery);
         if (!querySnapshot.empty) {
-          const userData = querySnapshot.docs[0].data();
+          const userData = querySnapshot.docs[0].data(); // Get user data
           setName(userData.name);
           setEmail(userData.email);
           setPhone(userData.phone);
@@ -31,20 +31,23 @@ export default function Profile() {
     fetchData();
   }, [userId]);
 
+  // Reload the page when the user's profile is updated
   useEffect(() => {
     if (route.params?.profileUpdated) {
       window.location.reload();
     }
   }, [route.params?.profileUpdated]);
 
+  // Handle updating user data
   const handleUpdate = () => {
-    updateDoc(doc(db, "users", "5vRaxfipR01QHQquwNhD"), {
+    updateDoc(doc(db, "users", "5vRaxfipR01QHQquwNhD"), { // Update user data based on the document ID
       name: name,
       email: email,
       phone: phone,
     })
       .then(() => {
         showToast("User Details Updated Successfully");
+        // Navigate to "ProfileDetails" and pass updated user information as parameters
         navigation.navigate("ProfileDetails", {
           userId,
           updatedName: name,
@@ -57,6 +60,7 @@ export default function Profile() {
       });
   };
 
+  // Function to show a toast message
   const showToast = (message) => {
     Toast.show({
       type: "success",

@@ -5,14 +5,20 @@ import { useNavigation } from '@react-navigation/native';
 import { styles } from "../css/HeaderStyles";
 
 export default function CommonHeader({ userName, userId }) {
+  // State to control the visibility of the menu
   const [menuVisible, setMenuVisible] = useState(false);
   const navigation = useNavigation();
+
+  // Function to toggle the menu visibility
   const toggleMenu = () => {
     setMenuVisible(!menuVisible);
   };
+
+  // Function to close the menu
   const closeMenu = () => {
     setMenuVisible(false);
   };
+
   return (
     <View style={styles.header}>
       <Text style={styles.headerText}>
@@ -29,10 +35,14 @@ export default function CommonHeader({ userName, userId }) {
   );
 }
 
+// MenuSlider component for rendering the menu
 function MenuSlider({ visible, closeMenu, navigation }) {
+  // If the menu is not visible, return null (don't render anything)
   if (!visible) return null;
+
   return (
     <Modal transparent={true} visible={visible}>
+      {/* Overlay to cover the background and close the menu when tapped */}
       <TouchableOpacity
         style={styles.overlay}
         activeOpacity={1}
