@@ -34,12 +34,12 @@ describe('BusList', () => {
     fireEvent.press(getByText('Book'));
 
     // Check that the navigate function was called with the correct screen name and route params
-    expect(navigateMock).toHaveBeenCalledWith('Bus Information', {
-      busNo: 'Bus Number', // Replace with actual bus number
-      from: 'From', // Replace with actual from location
-      to: 'To', // Replace with actual to location
-      price: 0, // Replace with actual price
-      stations: 'Stations', // Replace with actual stations
-    });
+    expect(navigateMock).toHaveBeenCalledWith("Bus Information", {
+        busNo: "BU1839",
+        from: "kalutara",
+        to: "colombo",
+        price: "Rs. 550",
+        stations: "T1, T2, B4, B5",
+      });
   });
 });

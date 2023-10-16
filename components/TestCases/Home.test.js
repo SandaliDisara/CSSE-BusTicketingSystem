@@ -28,8 +28,7 @@ describe('Home', () => {
     // Click the "Search Journey" button
     fireEvent.press(getByText('Search Journey'));
     
-    // Assert that the search functionality was triggered with "From" and "To" values
-    // You may need to mock the navigation function for this.
+  
   });
 
   it('navigates to the "MyCredit" screen when "My Credit" is clicked', () => {
@@ -38,8 +37,7 @@ describe('Home', () => {
     // Click the "My Credit" text
     fireEvent.press(getByText('My Credit'));
     
-    // Assert that the navigation function was called to navigate to "MyCredit" screen
-    // You can mock the navigation function and assert its calls.
+   
   });
 
   it('navigates to the "MyJourneys" screen when "My Journeys" is clicked', () => {
@@ -48,7 +46,6 @@ describe('Home', () => {
     // Click the "My Journeys" text
     fireEvent.press(getByText('My Journeys'));
     
-    // Assert that the navigation function was called to navigate to "MyJourneys" screen
-    // You can mock the navigation function and assert its calls.
+    
   });
 });
