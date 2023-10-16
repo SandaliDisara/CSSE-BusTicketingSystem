@@ -14,7 +14,7 @@ import { useNavigation } from "@react-navigation/native";
 export default function Home() {
   const [from, setFrom] = useState("");
   const [to, setTo] = useState("");
-  const [user, setUser] = useState("Kulanaka");
+  const [user, setUser] = useState("kulanaka");
   const navigation = useNavigation();
 
   const handleSearch = () => {
@@ -22,9 +22,9 @@ export default function Home() {
     navigation.navigate("List of Busses", { from, to });
   };
 
-  const navigateJourneyDetails = (user) => {
+  const navigateJourneyDetails = () => {
     // Navigate to BusList and pass 'from' and 'to' as route parameters
-    navigation.navigate("WebMyJourney");
+    navigation.navigate("WebMyJourney", { user });
   };
 
   return (

@@ -1,18 +1,51 @@
-import React from "react";
-import { View, Text, Image, StyleSheet, TouchableOpacity } from "react-native";
+import React, { useEffect, useState } from "react";
+import { View, Text, Image, StyleSheet, TouchableOpacity,  Dimensions  } from "react-native";
+import { collection, query, where, getDocs } from "firebase/firestore";
+import { db } from "./config";
+import { useRoute } from "@react-navigation/native";
+import { useNavigation } from "@react-navigation/native";
+import { ScrollView } from "react-native";
 
-import { useNavigation, useRoute } from '@react-navigation/native';
+
 
 export default function MyJourneys() {
+  const route = useRoute();
+  const [busData, setBusData] = useState([]);
+  const { params } = useRoute();
+  const { user } = params;
   const navigation = useNavigation();
-  const {params} = useRoute();
-  const  user  = params
   const journeyImage = require("../assets/journey.png");
 
   const handleNavigateHome = () => {
     // Navigate to BusList and pass 'from' and 'to' as route parameters
-    navigation.navigate("Home");
+    navigation.navigate("WebHome");
   };
+  useEffect(() => {
+    const q = query(
+      collection(db, "journeys"),
+      where("user", "==", user)
+    );
+
+    const fetchBusData = async () => {
+      try {
+        const querySnapshot = await getDocs(q);
+
+        const data = [];
+        querySnapshot.forEach((doc) => {
+          // Extract the bus number and stations
+          const { busNo, date, from, price, to, user } = doc.data();
+          data.push({ busNo, date, from, price, to, user});
+        });
+
+        setBusData(data);
+      } catch (error) {
+        console.error("Error fetching data: ", error);
+      }
+    };
+    fetchBusData();
+  }, [user]);
+
+  console.log(busData)
 
   return (
     <View style={styles.container}>
@@ -40,59 +73,27 @@ export default function MyJourneys() {
           <Text style={styles.heroSubtitle}>View all your journey history</Text>
         </View>
       </View>
-      <View style={styles.cardContainer}>
-        <View style={styles.card}>
-          <View style={styles.cardContent}>
-            <Text style={styles.cardTitle}>Journey to Kandy</Text>
-            <Text style={styles.cardText}>Bus No: BU-6784</Text>
-            <Text style={styles.cardText}>From: Kaluthara</Text>
-            <Text style={styles.cardText}>To: Colombo</Text>
-            <Text style={styles.cardText}>Price: 100.00</Text>
-            <Text style={styles.cardText}>Date: 10th Aug 2023</Text>
+      <View style={styles.container}>
+        <View style={styles.cardContainer}>
+          {busData.map((bus, index) => (
+            <View style={styles.card}>
+            <View style={styles.cardContent}>
+              <Text style={styles.cardTitle}>Journey to {bus.to}</Text>
+              <Text style={styles.cardText}>Bus No: {bus.busNo}</Text>
+              <Text style={styles.cardText}>From: {bus.from}</Text>
+              <Text style={styles.cardText}>To: {bus.to}</Text>
+              <Text style={styles.cardText}>Price: {bus.price}</Text>
+              <Text style={styles.cardText}>Date: {bus.date}</Text>
+            </View>
+            <Image source={journeyImage} style={styles.cardBackgroundImage} />
           </View>
-          <Image source={journeyImage} style={styles.cardBackgroundImage} />
+          ))}
         </View>
-        <View style={{ width: 16 }} />
-        <View style={styles.card}>
-          <View style={styles.cardContent}>
-            <Text style={styles.cardTitle}>Journey to Kandy</Text>
-            <Text style={styles.cardText}>Bus No: BU-6784</Text>
-            <Text style={styles.cardText}>From: Kaluthara</Text>
-            <Text style={styles.cardText}>To: Colombo</Text>
-            <Text style={styles.cardText}>Price: 100.00</Text>
-            <Text style={styles.cardText}>Date: 10th Aug 2023</Text>
-          </View>
-          <Image source={journeyImage} style={styles.cardBackgroundImage} />
-        </View>
-      </View>
-      <View style={styles.cardContainer}>
-        <View style={styles.card}>
-          <View style={styles.cardContent}>
-            <Text style={styles.cardTitle}>Journey to Kandy</Text>
-            <Text style={styles.cardText}>Bus No: BU-6784</Text>
-            <Text style={styles.cardText}>From: Kaluthara</Text>
-            <Text style={styles.cardText}>To: Colombo</Text>
-            <Text style={styles.cardText}>Price: 100.00</Text>
-            <Text style={styles.cardText}>Date: 10th Aug 2023</Text>
-          </View>
-          <Image source={journeyImage} style={styles.cardBackgroundImage} />
-        </View>
-        <View style={{ width: 16 }} />
-        <View style={styles.card}>
-          <View style={styles.cardContent}>
-            <Text style={styles.cardTitle}>Journey to Kandy</Text>
-            <Text style={styles.cardText}>Bus No: BU-6784</Text>
-            <Text style={styles.cardText}>From: Kaluthara</Text>
-            <Text style={styles.cardText}>To: Colombo</Text>
-            <Text style={styles.cardText}>Price: 100.00</Text>
-            <Text style={styles.cardText}>Date: 10th Aug 2023</Text>
-          </View>
-          <Image source={journeyImage} style={styles.cardBackgroundImage} />
-        </View>
-      </View>
+      </View> 
     </View>
   );
 }
+
 
 const styles = StyleSheet.create({
   container: {
@@ -156,16 +157,13 @@ const styles = StyleSheet.create({
     fontSize: 16,
   },
   cardContainer: {
-    flex: "justifyContent",
-    flexDirection: "row",
-    alignItems: "center",
-
+    flexDirection: "row", // Display cards horizontally
+    flexWrap: "wrap", // Allow cards to wrap onto the next line
+    justifyContent: "space-between", // Add space between cards
     margin: 20,
   },
   card: {
-    flex: 1,
-    width: "auto",
-    alignItems: "center",
+    width: "49.5%", // Set the width of each card
     backgroundColor: "white", // Make the background transparent
     borderRadius: 10,
     padding: 20,
@@ -179,6 +177,7 @@ const styles = StyleSheet.create({
     elevation: 5,
     overflow: "hidden", // Clip the content inside the card
     position: "relative", // Position the image absolutely inside the card
+    marginBottom: 20, // Adjust margin between cards if needed
   },
   cardBackgroundImage: {
     position: "absolute",

@@ -26,10 +26,12 @@
     "react-native-select-dropdown": "^3.3.4",
     "react-native-svg": "^13.14.0",
     "react-native-toast-message": "^2.1.6",
+    "react-native-vector-icons": "^10.0.0",
     "react-native-web": "~0.19.6"
   },
   "devDependencies": {
-    "@babel/core": "^7.20.0"
+    "@babel/core": "^7.20.0",
+    "@types/firebase": "^3.2.1"
   },
   "private": true
 }
