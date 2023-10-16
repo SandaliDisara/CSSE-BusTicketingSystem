@@ -116,7 +116,7 @@ const styles = StyleSheet.create({
   },
   rectangle: {
     padding: 20,
-    backgroundColor: "black", // Adjust as needed
+    backgroundColor: "black", 
     borderWidth: 1,
     borderColor: "#E2E0E0",
   },
@@ -126,7 +126,7 @@ const styles = StyleSheet.create({
   },
   creditText: {
     fontSize: 18,
-    color: "white", // Adjust the color as needed
+    color: "white", 
   },
   creditValue: {
     fontSize: 24,
@@ -185,12 +185,12 @@ const styles = StyleSheet.create({
     flex: 1,
     justifyContent: "center",
     alignItems: "center",
-    marginLeft: 40, // Adjusted margin
+    marginLeft: 40, 
   },
   textContainer: {
     flex: 3,
     justifyContent: "center",
-    marginLeft: 20, // Adjusted margin
+    marginLeft: 20, 
   },
   largeRectangleText: {
     fontSize: 32,

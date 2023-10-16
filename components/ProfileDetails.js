@@ -9,18 +9,19 @@ import {
   Image,
 } from "react-native";
 import { doc, getDoc, deleteDoc } from "firebase/firestore";
-import { db } from "./config.jsx";
-import Toast from "react-native-toast-message";
+import { db } from "./config.jsx"; // Importing a database connection
+import Toast from "react-native-toast-message"; // Importing a toast message component
 import { useNavigation, useRoute } from "@react-navigation/native";
-import { styles } from "../css/ProfileDetailsStyles";
+import { styles } from "../css/ProfileDetailsStyles"; // Importing styles for this component
 
 export default function ProfileDetails() {
-  const [name, setName] = useState("");
-  const [email, setEmail] = useState("");
-  const [phone, setPhone] = useState("");
-  const navigation = useNavigation();
-  const route = useRoute();
+  const [name, setName] = useState(""); // State to store user's name
+  const [email, setEmail] = useState(""); // State to store user's email
+  const [phone, setPhone] = useState(""); // State to store user's phone number
+  const navigation = useNavigation(); // Accessing navigation for screen transition
+  const route = useRoute(); // Accessing route information to get userId
 
+  // Fetch user data from the database and update the component's state
   useEffect(() => {
     const fetchData = async () => {
       try {
@@ -28,7 +29,7 @@ export default function ProfileDetails() {
         const userDocSnapshot = await getDoc(userDocRef);
 
         if (userDocSnapshot.exists()) {
-          const userData = userDocSnapshot.data();
+          const userData = userDocSnapshot.data(); // Get user data
           setName(userData.name);
           setEmail(userData.email);
           setPhone(userData.phone);
@@ -38,6 +39,7 @@ export default function ProfileDetails() {
       }
     };
 
+    // Update the component's state if there's updated data from route params
     if (route.params?.updatedName) {
       setName(route.params.updatedName);
     }
@@ -50,10 +52,12 @@ export default function ProfileDetails() {
     fetchData();
   }, [route.params]);
 
+  // Handle navigation to the "Profile" screen for editing user data
   const handleEditProfile = () => {
     navigation.navigate("Profile", { userId: "TjToHEBBh6hiRUPm0lf0" });
   };
 
+  // Handle user data deletion and navigate to the "Login" screen
   const handleDelete = () => {
     deleteDoc(doc(db, "users", "TjToHEBBh6hiRUPm0lf0"))
       .then(() => {
@@ -84,8 +88,8 @@ export default function ProfileDetails() {
           <TextInput
             value={name}
             style={[styles.input, styles.inputWidth]}
-            editable={false}
-            selectable={false}
+            editable={false} // Make the input field non-editable
+            selectable={false} // Make the text non-selectable
           />
         </View>
         <View style={styles.labelContainer}>
@@ -93,8 +97,8 @@ export default function ProfileDetails() {
           <TextInput
             value={email}
             style={[styles.input, styles.inputWidth]}
-            editable={false}
-            selectable={false}
+            editable={false} // Make the input field non-editable
+            selectable={false} // Make the text non-selectable
           />
         </View>
         <View style={styles.labelContainer}>
@@ -102,8 +106,8 @@ export default function ProfileDetails() {
           <TextInput
             value={phone}
             style={[styles.input, styles.inputWidth]}
-            editable={false}
-            selectable={false}
+            editable={false} // Make the input field non-editable
+            selectable={false} // Make the text non-selectable
           />
         </View>
 

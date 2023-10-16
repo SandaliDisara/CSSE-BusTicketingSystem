@@ -135,7 +135,7 @@ const styles = StyleSheet.create({
   },
   topicRegT: {
     color: "white",
-    fontSize: 65, // Increased font size to 65
+    fontSize: 65,
     marginTop: "-20%",
   },
   topicReg: {
