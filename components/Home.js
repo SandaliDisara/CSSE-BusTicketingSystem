@@ -15,8 +15,9 @@ import { useRoute } from "@react-navigation/native";
 
 export default function Home() {
   const route = useRoute();
-  const [from, setFrom] = useState(""); // State for "From" input
-  const [to, setTo] = useState(""); // State for "To" input
+  const [from, setFrom] = useState("");
+  const [to, setTo] = useState("");
+  const [user, setUser] = useState("kulanaka");
   const navigation = useNavigation();
   const userName = route.params && route.params.userName; // Get user name from route parameters
 
@@ -28,6 +29,11 @@ export default function Home() {
   // Function to handle the "My Credit" button press
   const handleCredit = () => {
     navigation.navigate("MyCredit"); // Navigate to the "My Credit" screen
+  };
+
+  const navigateJourneyDetails = () => {
+    // Navigate to BusList and pass 'from' and 'to' as route parameters
+    navigation.navigate("WebMyJourney", { user });
   };
 
   return (
@@ -66,20 +72,22 @@ export default function Home() {
             </Text>
           </View>
         </View>
-        <View style={styles.smallRectangle}>
-          <View style={styles.imageContainer}>
-            <Image
-              source={require("../assets/train.png")}
-              style={{ width:120, height: 120 }}
-            />
-          </View>
-          <View style={styles.textContainer}>
-            <Text style={styles.smallRectangleText}>My Journeys</Text>
-            <Text style={styles.smallRectanglePara}>
-              Check your previous {"\n"}journeys
-            </Text>
-          </View>
+        <TouchableOpacity onPress={navigateJourneyDetails}>
+          <View style={styles.smallRectangle}>
+            <View style={styles.imageContainer}>
+              <Image
+                source={require("../assets/train.png")}
+                style={{ width: 120, height: 120 }}
+              />
+            </View>
+            <View style={styles.textContainer}>
+              <Text style={styles.smallRectangleText}>My Journeys</Text>
+              <Text style={styles.smallRectanglePara}>
+                Check your previous {"\n"}journeys
+              </Text>
+            </View>
         </View>
+        </TouchableOpacity>
       </View>
     </View>
   );

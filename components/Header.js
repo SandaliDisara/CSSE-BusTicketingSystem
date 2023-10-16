@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import { View, Text, TouchableOpacity, Modal, StyleSheet } from "react-native";
 import { FontAwesome } from "@expo/vector-icons";
-import { useNavigation } from '@react-navigation/native';
+import { useNavigation } from "@react-navigation/native";
 import { styles } from "../css/HeaderStyles";
 
 export default function CommonHeader({ userName, userId }) {
@@ -30,7 +30,11 @@ export default function CommonHeader({ userName, userId }) {
           <FontAwesome name="bars" size={23} color="white" />
         </View>
       </TouchableOpacity>
-      <MenuSlider visible={menuVisible} closeMenu={closeMenu} navigation={navigation} />
+      <MenuSlider
+        visible={menuVisible}
+        closeMenu={closeMenu}
+        navigation={navigation}
+      />
     </View>
   );
 }
@@ -49,7 +53,9 @@ function MenuSlider({ visible, closeMenu, navigation }) {
         onPress={closeMenu}
       >
         <View style={styles.menu}>
-          <TouchableOpacity onPress={() => navigation.navigate("ProfileDetails")}>
+          <TouchableOpacity
+            onPress={() => navigation.navigate("ProfileDetails")}
+          >
             <View style={styles.menuItemContainer}>
               <FontAwesome name="user" size={35} color="white" />
               <Text style={styles.menuItem}>Profile</Text>
@@ -63,7 +69,7 @@ function MenuSlider({ visible, closeMenu, navigation }) {
             </View>
             <View style={styles.separator}></View>
           </TouchableOpacity>
-          <TouchableOpacity onPress={closeMenu}>
+          <TouchableOpacity onPress={() => navigation.navigate("MyCredit")}>
             <View style={styles.menuItemContainer}>
               <FontAwesome name="credit-card" size={35} color="white" />
               <Text style={styles.menuItem}>My Credits</Text>

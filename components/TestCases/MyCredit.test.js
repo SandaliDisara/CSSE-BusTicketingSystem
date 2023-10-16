@@ -70,5 +70,5 @@ describe('MyCredit', () => {
     expect(navigateMock).toHaveBeenCalledWith('TopUpBtn');
   });
 
-  // Add more test cases for your component's behavior here
+  
 });

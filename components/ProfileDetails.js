@@ -1,5 +1,13 @@
 import React, { useState, useEffect } from "react";
-import { StyleSheet, Text, View, TextInput, Button, TouchableOpacity, Image } from "react-native";
+import {
+  StyleSheet,
+  Text,
+  View,
+  TextInput,
+  Button,
+  TouchableOpacity,
+  Image,
+} from "react-native";
 import { doc, getDoc, deleteDoc } from "firebase/firestore";
 import { db } from "./config.jsx"; // Importing a database connection
 import Toast from "react-native-toast-message"; // Importing a toast message component
@@ -17,7 +25,7 @@ export default function ProfileDetails() {
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const userDocRef = doc(db, "users", "5vRaxfipR01QHQquwNhD"); // Reference to the user document
+        const userDocRef = doc(db, "users", "TjToHEBBh6hiRUPm0lf0");
         const userDocSnapshot = await getDoc(userDocRef);
 
         if (userDocSnapshot.exists()) {
@@ -46,12 +54,12 @@ export default function ProfileDetails() {
 
   // Handle navigation to the "Profile" screen for editing user data
   const handleEditProfile = () => {
-    navigation.navigate("Profile", { userId: "VsYdTYBamBmAb9I49STU" });
+    navigation.navigate("Profile", { userId: "TjToHEBBh6hiRUPm0lf0" });
   };
 
   // Handle user data deletion and navigate to the "Login" screen
   const handleDelete = () => {
-    deleteDoc(doc(db, "users", "5vRaxfipR01QHQquwNhD"))
+    deleteDoc(doc(db, "users", "TjToHEBBh6hiRUPm0lf0"))
       .then(() => {
         console.log("Data deleted");
         navigation.navigate("Login");
@@ -64,7 +72,10 @@ export default function ProfileDetails() {
   return (
     <View>
       <TouchableOpacity onPress={() => navigation.navigate("Home")}>
-        <Image source={require("../assets/bck.png")} style={{ width: 50, height: 50, marginTop: 8, marginLeft: 3 }} />
+        <Image
+          source={require("../assets/bck.png")}
+          style={{ width: 50, height: 50, marginTop: 8, marginLeft: 3 }}
+        />
       </TouchableOpacity>
 
       <View style={styles.container}>

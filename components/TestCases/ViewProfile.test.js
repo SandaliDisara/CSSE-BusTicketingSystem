@@ -49,7 +49,6 @@ describe('ViewProfile', () => {
     // Click the "Delete Profile Data" button
     fireEvent.press(getByText('Delete Profile Data'));
 
-    // Add your test logic for data deletion, for example, a confirmation modal or alert.
-    // You can mock or spy on functions that handle data deletion and check if they were called as expected.
+    
   });
 });
