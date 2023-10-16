@@ -6,15 +6,12 @@ import { useNavigation } from "@react-navigation/native";
 import { doc, getDocs, collection, getDoc } from "firebase/firestore";
 
 
-export default function MyCredit({ creditAmount, updateCreditAmount }) {
+export default function MyCredit() {
   const navigation = useNavigation();
   const [creditAmount, setCreditAmount] = useState(null);
   const [lastTopUpDate, setLastTopUpDate] = useState(null);
   const [creditHistory, setCreditHistory] = useState([]);
 
-  const updateCreditAmount = (newAmount) => {
-    setCreditAmount(newAmount);
-  };
 
   const handleTopUpBtn = () => {
     // Navigate to TopUpBtn
@@ -75,7 +72,7 @@ export default function MyCredit({ creditAmount, updateCreditAmount }) {
             />
           </View>
           <View style={styles.textContainer}>
-            <Text style={styles.largeRectangleText}>{newAmount}</Text>
+            <Text style={styles.largeRectangleText}>{creditAmount}</Text>
             <Text style={styles.mediumRectangleText}>Remaining Credits</Text>
             <Text style={styles.smallRectangleText}>
               Last top-up date - {lastTopUpDate}

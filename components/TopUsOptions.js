@@ -7,26 +7,46 @@ import {
   TouchableOpacity,
 } from "react-native";
 import { db } from "./config"; // Import Firestore and FieldValue
-import { doc, updateDoc, collection, addDoc } from "firebase/firestore";
-import MyCredit from "./MyCredit";
+import { doc, updateDoc, collection, addDoc, getDoc } from "firebase/firestore";
 
 
 
-
-
-export default function TopUpOptions({ creditAmount, updateCreditAmount }) {
+export default function TopUpOptions() {
   const [topUpAmount, setTopUpAmount] = useState("");
 
-  const handleTopUp = async (creditAmount) => {
+  async function fetchCreditAmount() {
     try {
-      const parsedAmount = parseInt(topUpAmount) || 0;
-      const newAmount = parseInt(topUpAmount) + creditAmount;
+      
+      const creditDocRef = doc(db, "credits", "Q8ZqHR2BlZPnWcMHc4qQ");
+  
+      // Fetch the document data
+      const creditDocSnapshot = await getDoc(creditDocRef);
+  
+      if (creditDocSnapshot.exists()) {
+        const creditData = creditDocSnapshot.data();
+        const amount = creditData.amount;
+        return amount;
+      } else {
+        // Handle the case where the document doesn't exist
+        return null;
+      }
+      console.log("Amount:", amount);
+    } catch (error) {
+      console.error("Error fetching credit amount:", error);
+      return null;
+    }
+  }
+
+  const handleTopUp = async (amount) => {
+    try {
+      const parsedAmount = parseInt(fetchCreditAmount()) || 0;
+      const newAmount = parseInt(fetchCreditAmount()) + amount;
 
       const customDate = "12-12-2023";
 
       const creditDocRef = doc(db, "credits", "Q8ZqHR2BlZPnWcMHc4qQ");
       await updateDoc(creditDocRef, {
-        creditAmount: newAmount,
+        creditAmount: amount,
       });
 
       const topUpHistoryCollectionRef = collection(creditDocRef, "topUpHistory");
@@ -34,7 +54,8 @@ export default function TopUpOptions({ creditAmount, updateCreditAmount }) {
         amount: amount,
         date: customDate,
       });
-
+      console.log("Added Amount:", amount);
+      console.log(fetchCreditAmount());
       console.log("New Amount:", newAmount);
       updateCreditAmount(newAmount); // This function should be defined in the parent component
       setTopUpAmount("");
@@ -81,7 +102,7 @@ export default function TopUpOptions({ creditAmount, updateCreditAmount }) {
           <Text style={styles.topUpButtonText} >Top Up Credit</Text>
         </TouchableOpacity>
       </View>
-      <MyCredit creditAmount={creditAmount} updateCreditAmount={updateCreditAmount} />
+
 
     </View>
   );
