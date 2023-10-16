@@ -55,7 +55,7 @@ export default function HomeOptions() {
       <TouchableOpacity onPress={navigateToBookJourney}>
         <View style={[styles.card, styles.customCard]}>
           <Image
-            source={require("../assets/bus.png")} // Replace with your image source
+            source={require("../assets/bus.png")} 
             style={[styles.cardImage, styles.customCardImage]}
           />
           <Text style={[styles.cardText, styles.customCardText]}>Book Journey</Text>
@@ -65,7 +65,7 @@ export default function HomeOptions() {
       <TouchableOpacity onPress={navigateToMyCredits}>
         <View style={[styles.card, styles.customCard]}>
           <Image
-            source={require("../assets/coins.png")} // Replace with your image source
+            source={require("../assets/coins.png")} 
             style={[styles.cardImage, styles.customCardImage]}
           />
           <Text style={[styles.cardText, styles.customCardText]}>My Credits</Text>
@@ -75,7 +75,7 @@ export default function HomeOptions() {
       <TouchableOpacity onPress={navigateToJourneyHistory}>
         <View style={[styles.card, styles.customCard]}>
           <Image
-            source={require("../assets/location.png")} // Replace with your image source
+            source={require("../assets/location.png")} 
             style={[styles.cardImage, styles.customCardImage]}
           />
           <Text style={[styles.cardText, styles.customCardText]}>Journey History</Text>
