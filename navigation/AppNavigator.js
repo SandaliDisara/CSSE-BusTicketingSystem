@@ -20,6 +20,7 @@ export default function AppNavigator() {
   return (
     <NavigationContainer>
       <Stack.Navigator>
+      
         <Stack.Screen
           name="Login"
           component={Login}
@@ -65,6 +66,7 @@ export default function AppNavigator() {
           component={WebHome}
           options={{ headerShown: false }}
         />
+        
       </Stack.Navigator>
     </NavigationContainer>
   );
