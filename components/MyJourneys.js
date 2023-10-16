@@ -1,12 +1,17 @@
 import React, { useEffect, useState } from "react";
-import { View, Text, Image, StyleSheet, TouchableOpacity,  Dimensions  } from "react-native";
+import {
+  View,
+  Text,
+  Image,
+  StyleSheet,
+  TouchableOpacity,
+  Dimensions,
+} from "react-native";
 import { collection, query, where, getDocs } from "firebase/firestore";
 import { db } from "./config";
 import { useRoute } from "@react-navigation/native";
 import { useNavigation } from "@react-navigation/native";
 import { ScrollView } from "react-native";
-
-
 
 export default function MyJourneys() {
   const route = useRoute();
@@ -18,13 +23,10 @@ export default function MyJourneys() {
 
   const handleNavigateHome = () => {
     // Navigate to BusList and pass 'from' and 'to' as route parameters
-    navigation.navigate("WebHome");
+    navigation.navigate("Home");
   };
   useEffect(() => {
-    const q = query(
-      collection(db, "journeys"),
-      where("user", "==", user)
-    );
+    const q = query(collection(db, "journeys"), where("user", "==", user));
 
     const fetchBusData = async () => {
       try {
@@ -34,7 +36,7 @@ export default function MyJourneys() {
         querySnapshot.forEach((doc) => {
           // Extract the bus number and stations
           const { busNo, date, from, price, to, user } = doc.data();
-          data.push({ busNo, date, from, price, to, user});
+          data.push({ busNo, date, from, price, to, user });
         });
 
         setBusData(data);
@@ -45,7 +47,7 @@ export default function MyJourneys() {
     fetchBusData();
   }, [user]);
 
-  console.log(busData)
+  console.log(busData);
 
   return (
     <View style={styles.container}>
@@ -54,7 +56,9 @@ export default function MyJourneys() {
           <Text style={styles.headerText}>ticketX</Text>
         </View>
         <View style={styles.headerCenter}>
-          <Text onPress={handleNavigateHome} style={styles.headerNavLink}>Home</Text>
+          <Text onPress={handleNavigateHome} style={styles.headerNavLink}>
+            Home
+          </Text>
           <Text style={styles.headerNavLink}>My Journeys</Text>
           <Text style={styles.headerNavLink}>My Credits</Text>
         </View>
@@ -77,23 +81,22 @@ export default function MyJourneys() {
         <View style={styles.cardContainer}>
           {busData.map((bus, index) => (
             <View style={styles.card}>
-            <View style={styles.cardContent}>
-              <Text style={styles.cardTitle}>Journey to {bus.to}</Text>
-              <Text style={styles.cardText}>Bus No: {bus.busNo}</Text>
-              <Text style={styles.cardText}>From: {bus.from}</Text>
-              <Text style={styles.cardText}>To: {bus.to}</Text>
-              <Text style={styles.cardText}>Price: {bus.price}</Text>
-              <Text style={styles.cardText}>Date: {bus.date}</Text>
+              <View style={styles.cardContent}>
+                <Text style={styles.cardTitle}>Journey to {bus.to}</Text>
+                <Text style={styles.cardText}>Bus No: {bus.busNo}</Text>
+                <Text style={styles.cardText}>From: {bus.from}</Text>
+                <Text style={styles.cardText}>To: {bus.to}</Text>
+                <Text style={styles.cardText}>Price: {bus.price}</Text>
+                <Text style={styles.cardText}>Date: {bus.date}</Text>
+              </View>
+              <Image source={journeyImage} style={styles.cardBackgroundImage} />
             </View>
-            <Image source={journeyImage} style={styles.cardBackgroundImage} />
-          </View>
           ))}
         </View>
-      </View> 
+      </View>
     </View>
   );
 }
-
 
 const styles = StyleSheet.create({
   container: {
