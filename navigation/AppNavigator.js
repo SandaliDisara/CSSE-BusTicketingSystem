@@ -10,13 +10,14 @@ import ProfileDetails from "../components/ProfileDetails";
 import Profile from "../components/Profile";
 import WebHome from "../components/WebHome";
 import MyJourneys from "../components/MyJourneys";
+import WebViewDetails from "../components/WebViewDetails";
 
 const Stack = createNativeStackNavigator();
 
 export default function AppNavigator() {
   return (
     <NavigationContainer>
-      <Stack.Navigator initialRouteName="WebMyJourney">
+      <Stack.Navigator initialRouteName="Home">
         <Stack.Screen name="Login" component={Login}  options={{ headerShown: false }}/>
         <Stack.Screen name="Home" component={Home} />
         <Stack.Screen name="List of Busses" component={BusList} />
@@ -26,6 +27,7 @@ export default function AppNavigator() {
         <Stack.Screen name="Register" component={Register}  options={{ headerShown: false }}/>
         <Stack.Screen name="Profile" component={Profile}  options={{ headerShown: false }}/>
         <Stack.Screen name="WebHome" component={WebHome} options={{ headerShown: false }}/>
+        <Stack.Screen name="journeyDetails" component={WebViewDetails} />
       </Stack.Navigator>
     </NavigationContainer>
   );

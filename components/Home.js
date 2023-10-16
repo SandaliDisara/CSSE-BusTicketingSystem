@@ -14,11 +14,17 @@ import { useNavigation } from "@react-navigation/native";
 export default function Home() {
   const [from, setFrom] = useState("");
   const [to, setTo] = useState("");
+  const [user, setUser] = useState("Kulanaka");
   const navigation = useNavigation();
 
   const handleSearch = () => {
     // Navigate to BusList and pass 'from' and 'to' as route parameters
     navigation.navigate("List of Busses", { from, to });
+  };
+
+  const navigateJourneyDetails = (user) => {
+    // Navigate to BusList and pass 'from' and 'to' as route parameters
+    navigation.navigate("WebMyJourney");
   };
 
   return (
@@ -57,20 +63,22 @@ export default function Home() {
             </Text>
           </View>
         </View>
-        <View style={styles.smallRectangle}>
-          <View style={styles.imageContainer}>
-            <Image
-              source={require("../assets/train.png")}
-              style={{ width: 120, height: 120 }}
-            />
-          </View>
-          <View style={styles.textContainer}>
-            <Text style={styles.smallRectangleText}>My Journeys</Text>
-            <Text style={styles.smallRectanglePara}>
-              Check your previous {"\n"}journeys
-            </Text>
-          </View>
+        <TouchableOpacity onPress={navigateJourneyDetails}>
+          <View style={styles.smallRectangle}>
+            <View style={styles.imageContainer}>
+              <Image
+                source={require("../assets/train.png")}
+                style={{ width: 120, height: 120 }}
+              />
+            </View>
+            <View style={styles.textContainer}>
+              <Text style={styles.smallRectangleText}>My Journeys</Text>
+              <Text style={styles.smallRectanglePara}>
+                Check your previous {"\n"}journeys
+              </Text>
+            </View>
         </View>
+        </TouchableOpacity>
       </View>
     </View>
   );

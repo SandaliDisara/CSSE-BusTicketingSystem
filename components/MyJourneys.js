@@ -1,7 +1,19 @@
 import React from "react";
 import { View, Text, Image, StyleSheet, TouchableOpacity } from "react-native";
 
+import { useNavigation, useRoute } from '@react-navigation/native';
+
 export default function MyJourneys() {
+  const navigation = useNavigation();
+  const {params} = useRoute();
+  const  user  = params
+  const journeyImage = require("../assets/journey.png");
+
+  const handleNavigateHome = () => {
+    // Navigate to BusList and pass 'from' and 'to' as route parameters
+    navigation.navigate("Home");
+  };
+
   return (
     <View style={styles.container}>
       <View style={styles.header}>
@@ -9,12 +21,12 @@ export default function MyJourneys() {
           <Text style={styles.headerText}>ticketX</Text>
         </View>
         <View style={styles.headerCenter}>
-          <Text style={styles.headerNavLink}>Home</Text>
+          <Text onPress={handleNavigateHome} style={styles.headerNavLink}>Home</Text>
           <Text style={styles.headerNavLink}>My Journeys</Text>
           <Text style={styles.headerNavLink}>My Credits</Text>
         </View>
         <View style={styles.headerRight}>
-          <Text style={styles.headerText}>Hi Kulanaka</Text>
+          <Text style={styles.headerText}>{user}</Text>
         </View>
       </View>
       <View style={styles.heroSection}>
@@ -30,44 +42,52 @@ export default function MyJourneys() {
       </View>
       <View style={styles.cardContainer}>
         <View style={styles.card}>
-          <Text style={styles.cardTitle}>Journey Details</Text>
-          <Text style={styles.cardText}>Date: October 15, 2023</Text>
-          <Text style={styles.cardText}>Route: Example Route</Text>
-          {/* Add more details as needed */}
-          <TouchableOpacity style={styles.button}>
-            <Text style={styles.buttonText}>View details</Text>
-          </TouchableOpacity>
+          <View style={styles.cardContent}>
+            <Text style={styles.cardTitle}>Journey to Kandy</Text>
+            <Text style={styles.cardText}>Bus No: BU-6784</Text>
+            <Text style={styles.cardText}>From: Kaluthara</Text>
+            <Text style={styles.cardText}>To: Colombo</Text>
+            <Text style={styles.cardText}>Price: 100.00</Text>
+            <Text style={styles.cardText}>Date: 10th Aug 2023</Text>
+          </View>
+          <Image source={journeyImage} style={styles.cardBackgroundImage} />
         </View>
         <View style={{ width: 16 }} />
         <View style={styles.card}>
-          <Text style={styles.cardTitle}>Journey Details</Text>
-          <Text style={styles.cardText}>Date: October 15, 2023</Text>
-          <Text style={styles.cardText}>Route: Example Route</Text>
-          {/* Add more details as needed */}
-          <TouchableOpacity style={styles.button}>
-            <Text style={styles.buttonText}>View details</Text>
-          </TouchableOpacity>
+          <View style={styles.cardContent}>
+            <Text style={styles.cardTitle}>Journey to Kandy</Text>
+            <Text style={styles.cardText}>Bus No: BU-6784</Text>
+            <Text style={styles.cardText}>From: Kaluthara</Text>
+            <Text style={styles.cardText}>To: Colombo</Text>
+            <Text style={styles.cardText}>Price: 100.00</Text>
+            <Text style={styles.cardText}>Date: 10th Aug 2023</Text>
+          </View>
+          <Image source={journeyImage} style={styles.cardBackgroundImage} />
         </View>
       </View>
       <View style={styles.cardContainer}>
         <View style={styles.card}>
-          <Text style={styles.cardTitle}>Journey Details</Text>
-          <Text style={styles.cardText}>Date: October 15, 2023</Text>
-          <Text style={styles.cardText}>Route: Example Route</Text>
-          {/* Add more details as needed */}
-          <TouchableOpacity style={styles.button}>
-            <Text style={styles.buttonText}>View details</Text>
-          </TouchableOpacity>
+          <View style={styles.cardContent}>
+            <Text style={styles.cardTitle}>Journey to Kandy</Text>
+            <Text style={styles.cardText}>Bus No: BU-6784</Text>
+            <Text style={styles.cardText}>From: Kaluthara</Text>
+            <Text style={styles.cardText}>To: Colombo</Text>
+            <Text style={styles.cardText}>Price: 100.00</Text>
+            <Text style={styles.cardText}>Date: 10th Aug 2023</Text>
+          </View>
+          <Image source={journeyImage} style={styles.cardBackgroundImage} />
         </View>
         <View style={{ width: 16 }} />
         <View style={styles.card}>
-          <Text style={styles.cardTitle}>Journey Details</Text>
-          <Text style={styles.cardText}>Date: October 15, 2023</Text>
-          <Text style={styles.cardText}>Route: Example Route</Text>
-          {/* Add more details as needed */}
-          <TouchableOpacity style={styles.button}>
-            <Text style={styles.buttonText}>View details</Text>
-          </TouchableOpacity>
+          <View style={styles.cardContent}>
+            <Text style={styles.cardTitle}>Journey to Kandy</Text>
+            <Text style={styles.cardText}>Bus No: BU-6784</Text>
+            <Text style={styles.cardText}>From: Kaluthara</Text>
+            <Text style={styles.cardText}>To: Colombo</Text>
+            <Text style={styles.cardText}>Price: 100.00</Text>
+            <Text style={styles.cardText}>Date: 10th Aug 2023</Text>
+          </View>
+          <Image source={journeyImage} style={styles.cardBackgroundImage} />
         </View>
       </View>
     </View>
@@ -136,12 +156,17 @@ const styles = StyleSheet.create({
     fontSize: 16,
   },
   cardContainer: {
+    flex: "justifyContent",
     flexDirection: "row",
-    alignItems: "center", 
+    alignItems: "center",
+
+    margin: 20,
   },
   card: {
     flex: 1,
-    backgroundColor: "white",
+    width: "auto",
+    alignItems: "center",
+    backgroundColor: "white", // Make the background transparent
     borderRadius: 10,
     padding: 20,
     shadowColor: "#000",
@@ -152,6 +177,30 @@ const styles = StyleSheet.create({
     shadowOpacity: 0.25,
     shadowRadius: 3.84,
     elevation: 5,
+    overflow: "hidden", // Clip the content inside the card
+    position: "relative", // Position the image absolutely inside the card
+  },
+  cardBackgroundImage: {
+    position: "absolute",
+    bottom: 0,
+    right: 0,
+    width: 220, // Set the width of the image
+    height: 200, // Set the height of the image
+    resizeMode: "cover",
+  },
+  cardContent: {
+    flex: 1,
+    justifyContent: "center",
+    alignItems: "center",
+    borderRadius: 10, // Apply border radius to match the card's border radius
+    width: "100%", // Ensure the content covers the entire card width
+  },
+  cardImage: {
+    width: 200, // Adjust the width and height according to your design
+    height: 200,
+    resizeMode: "cover",
+    borderRadius: 10,
+    marginBottom: 10,
   },
   cardTitle: {
     fontSize: 20,
