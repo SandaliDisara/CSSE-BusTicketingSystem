@@ -1,18 +1,18 @@
 import React, { useState } from "react";
 import { View, Text, TouchableOpacity, Modal, StyleSheet } from "react-native";
 import { FontAwesome } from "@expo/vector-icons";
+import { useNavigation } from '@react-navigation/native';
+import { styles } from "../css/HeaderStyles";
 
-export default function CommonHeader({ userName }) {
+export default function CommonHeader({ userName, userId }) {
   const [menuVisible, setMenuVisible] = useState(false);
-
+  const navigation = useNavigation();
   const toggleMenu = () => {
     setMenuVisible(!menuVisible);
   };
-
   const closeMenu = () => {
     setMenuVisible(false);
   };
-
   return (
     <View style={styles.header}>
       <Text style={styles.headerText}>
@@ -24,15 +24,13 @@ export default function CommonHeader({ userName }) {
           <FontAwesome name="bars" size={23} color="white" />
         </View>
       </TouchableOpacity>
-
-      <MenuSlider visible={menuVisible} closeMenu={closeMenu} />
+      <MenuSlider visible={menuVisible} closeMenu={closeMenu} navigation={navigation} />
     </View>
   );
 }
 
-function MenuSlider({ visible, closeMenu }) {
+function MenuSlider({ visible, closeMenu, navigation }) {
   if (!visible) return null;
-
   return (
     <Modal transparent={true} visible={visible}>
       <TouchableOpacity
@@ -41,7 +39,7 @@ function MenuSlider({ visible, closeMenu }) {
         onPress={closeMenu}
       >
         <View style={styles.menu}>
-          <TouchableOpacity onPress={closeMenu}>
+          <TouchableOpacity onPress={() => navigation.navigate("ProfileDetails")}>
             <View style={styles.menuItemContainer}>
               <FontAwesome name="user" size={35} color="white" />
               <Text style={styles.menuItem}>Profile</Text>
@@ -73,62 +71,3 @@ function MenuSlider({ visible, closeMenu }) {
     </Modal>
   );
 }
-
-const styles = StyleSheet.create({
-  header: {
-    flexDirection: "row",
-    justifyContent: "space-between",
-    alignItems: "center",
-    paddingHorizontal: 20,
-    marginTop: -38,
-    backgroundColor: "white",
-  },
-  headerText: {
-    fontSize: 30,
-    fontWeight: "500",
-  },
-  menuButton: {
-    padding: 10,
-    borderRadius: 30,
-  },
-  menuIconCircle: {
-    backgroundColor: "black",
-    width: 45,
-    height: 45,
-    borderRadius: 25,
-    alignItems: "center",
-    justifyContent: "center",
-  },
-  overlay: {
-    flex: 1,
-    backgroundColor: "rgba(0, 0, 0, 0.6)",
-    justifyContent: "flex-end",
-  },
-  menu: {
-    backgroundColor: "black",
-    width: "75%",
-    height: "100%",
-    paddingTop: 20,
-    paddingRight: 20,
-    position: "absolute",
-    right: 0,
-  },
-  menuItemContainer: {
-    flexDirection: "row",
-    alignItems: "center",
-    marginBottom: 40,
-    marginTop: 40,
-    marginLeft: 40,
-  },
-  menuItem: {
-    color: "white",
-    fontSize: 18,
-    marginLeft: 30,
-  },
-  separator: {
-    borderBottomColor: "white",
-    borderBottomWidth: 1,
-    marginLeft: 20,
-    marginRight: 20,
-  },
-});
