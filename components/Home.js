@@ -17,6 +17,7 @@ export default function Home() {
   const route = useRoute();
   const [from, setFrom] = useState("");
   const [to, setTo] = useState("");
+  const [user, setUser] = useState("kulanaka");
   const navigation = useNavigation();
   const userName = route.params && route.params.userName;
   const handleSearch = () => {
@@ -26,6 +27,11 @@ export default function Home() {
   const handleCredit = () => {
     // Navigate to Credit
     navigation.navigate("MyCredit");
+  };
+
+  const navigateJourneyDetails = () => {
+    // Navigate to BusList and pass 'from' and 'to' as route parameters
+    navigation.navigate("WebMyJourney", { user });
   };
 
   return (
@@ -64,20 +70,22 @@ export default function Home() {
             </Text>
           </View>
         </View>
-        <View style={styles.smallRectangle}>
-          <View style={styles.imageContainer}>
-            <Image
-              source={require("../assets/train.png")}
-              style={{ width: 120, height: 120 }}
-            />
-          </View>
-          <View style={styles.textContainer}>
-            <Text style={styles.smallRectangleText}>My Journeys</Text>
-            <Text style={styles.smallRectanglePara}>
-              Check your previous {"\n"}journeys
-            </Text>
-          </View>
+        <TouchableOpacity onPress={navigateJourneyDetails}>
+          <View style={styles.smallRectangle}>
+            <View style={styles.imageContainer}>
+              <Image
+                source={require("../assets/train.png")}
+                style={{ width: 120, height: 120 }}
+              />
+            </View>
+            <View style={styles.textContainer}>
+              <Text style={styles.smallRectangleText}>My Journeys</Text>
+              <Text style={styles.smallRectanglePara}>
+                Check your previous {"\n"}journeys
+              </Text>
+            </View>
         </View>
+        </TouchableOpacity>
       </View>
     </View>
   );
