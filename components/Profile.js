@@ -1,28 +1,25 @@
 import React, { useState, useEffect } from "react";
-import { StyleSheet, Text, View, TextInput, Button } from "react-native";
-import { collection, doc, getDoc, updateDoc } from "firebase/firestore";
-import { db } from "./config.jsx";
-import Toast from "react-native-toast-message";
+import { StyleSheet, Text, View, TextInput, Button, Image, TouchableOpacity } from "react-native";
+import { collection, query, where, getDocs, doc, getDoc, updateDoc } from "firebase/firestore";
+import { db } from "./config.jsx"; // Importing a database connection
+import Toast from "react-native-toast-message"; // Importing a toast message component
 import { useNavigation, useRoute } from "@react-navigation/native";
 
 export default function Profile() {
-  const [name, setName] = useState("");
-  const [email, setEmail] = useState("");
-  const [phone, setPhone] = useState("");
-  const navigation = useNavigation();
-  const route = useRoute();
+  const [name, setName] = useState(""); // State to store user's name
+  const [email, setEmail] = useState(""); // State to store user's email
+  const [phone, setPhone] = useState(""); // State to store user's phone number
+  const navigation = useNavigation(); // Accessing navigation for screen transition
+  const route = useRoute(); // Accessing route information to get userId
 
-  // Access the userId parameter from the route
-  const userId = route.params?.userId;
-
+  // Fetch user data from the database based on name
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const docRef = doc(db, "users", userId);
-        const docSnap = await getDoc(docRef);
-
-        if (docSnap.exists()) {
-          const userData = docSnap.data();
+        const userQuery = query(collection(db, "users"), where("name", "==", "Mehara")); // Query to find the user by name
+        const querySnapshot = await getDocs(userQuery);
+        if (!querySnapshot.empty) {
+          const userData = querySnapshot.docs[0].data(); // Get user data
           setName(userData.name);
           setEmail(userData.email);
           setPhone(userData.phone);
@@ -31,28 +28,26 @@ export default function Profile() {
         console.error("Error fetching user data: ", error);
       }
     };
-
     fetchData();
   }, [userId]);
 
-  // Use this useEffect to trigger a page reload when 'profileUpdated' is true
+  // Reload the page when the user's profile is updated
   useEffect(() => {
     if (route.params?.profileUpdated) {
-      // Reload the page to get the latest data
       window.location.reload();
     }
   }, [route.params?.profileUpdated]);
 
+  // Handle updating user data
   const handleUpdate = () => {
-    updateDoc(doc(db, "users", userId), {
+    updateDoc(doc(db, "users", "5vRaxfipR01QHQquwNhD"), { // Update user data based on the document ID
       name: name,
       email: email,
       phone: phone,
     })
       .then(() => {
         showToast("User Details Updated Successfully");
-  
-        // Pass the updated user data as parameters to ProfileDetails
+        // Navigate to "ProfileDetails" and pass updated user information as parameters
         navigation.navigate("ProfileDetails", {
           userId,
           updatedName: name,
@@ -64,8 +59,8 @@ export default function Profile() {
         console.error("Error updating user data: ", error);
       });
   };
-  
 
+  // Function to show a toast message
   const showToast = (message) => {
     Toast.show({
       type: "success",
@@ -76,35 +71,43 @@ export default function Profile() {
   };
 
   return (
-    <View style={styles.container}>
-      <Text style={styles.topicReg}>
-        <b>{name}</b>
-      </Text><br /> <br /> <br /> <br /><br />
-      <TextInput
-        value={name}
-        placeholder="Name"
-        onChangeText={setName}
-        style={[styles.input, styles.inputWidth]}
-      /> <br /> <br />
-      <TextInput
-        value={email}
-        placeholder="Email"
-        onChangeText={setEmail}
-        style={[styles.input, styles.inputWidth]}
-      />
-      <br /><br />
-      <TextInput
-        value={phone}
-        placeholder="Phone Number"
-        onChangeText={setPhone}
-        style={[styles.input, styles.inputWidth]}
-      /> <br /> <br />
-      <View style={[styles.button, styles.inputWidth]}>
-        <Text style={styles.buttonText} onPress={handleUpdate}>
-          <b>Save Changes</b>
+    <View>
+      <TouchableOpacity onPress={() => navigation.navigate("ProfileDetails")}>
+        <Image source={require("../assets/bck.png")} style={{ width: 50, height: 50, marginTop: "8%", marginLeft: "3%" }} />
+      </TouchableOpacity>
+      <View style={styles.container}>
+        <Text style={styles.topicReg}>
+          <b>{name}</b>
         </Text>
+        <br /> <br /> <br /> <br /><br />
+        <TextInput
+          value={name}
+          placeholder="Name"
+          onChangeText={setName}
+          style={[styles.input, styles.inputWidth]}
+        />
+        <br /> <br />
+        <TextInput
+          value={email}
+          placeholder="Email"
+          onChangeText={setEmail}
+          style={[styles.input, styles.inputWidth]}
+        />
+        <br /><br />
+        <TextInput
+          value={phone}
+          placeholder="Phone Number"
+          onChangeText={setPhone}
+          style={[styles.input, styles.inputWidth]}
+        />
+        <br /> <br />
+        <View style={[styles.button, styles.inputWidth]}>
+          <Text style={styles.buttonText} onPress={handleUpdate}>
+            <b>Save Changes</b>
+          </Text>
+        </View>
+        <Toast ref={(ref) => Toast.setRef(ref)} />
       </View>
-      <Toast ref={(ref) => Toast.setRef(ref)} />
     </View>
   );
 }

@@ -1,24 +1,35 @@
 import React, { useState, useEffect } from "react";
-import { StyleSheet, Text, View, TextInput, Button } from "react-native";
-import { collection, doc, getDoc, deleteDoc } from "firebase/firestore";
-import { db } from "./config.jsx";
-import Toast from "react-native-toast-message";
+import {
+  StyleSheet,
+  Text,
+  View,
+  TextInput,
+  Button,
+  TouchableOpacity,
+  Image,
+} from "react-native";
+import { doc, getDoc, deleteDoc } from "firebase/firestore";
+import { db } from "./config.jsx"; // Importing a database connection
+import Toast from "react-native-toast-message"; // Importing a toast message component
 import { useNavigation, useRoute } from "@react-navigation/native";
+import { styles } from "../css/ProfileDetailsStyles"; // Importing styles for this component
 
 export default function ProfileDetails() {
-  const [name, setName] = useState("");
-  const [email, setEmail] = useState("");
-  const [phone, setPhone] = useState("");
-  const navigation = useNavigation();
-  const route = useRoute();
-  const userId = route.params?.userId;
+  const [name, setName] = useState(""); // State to store user's name
+  const [email, setEmail] = useState(""); // State to store user's email
+  const [phone, setPhone] = useState(""); // State to store user's phone number
+  const navigation = useNavigation(); // Accessing navigation for screen transition
+  const route = useRoute(); // Accessing route information to get userId
+
+  // Fetch user data from the database and update the component's state
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const docRef = doc(db, "users", userId);
-        const docSnap = await getDoc(docRef);
-        if (docSnap.exists()) {
-          const userData = docSnap.data();
+        const userDocRef = doc(db, "users", "TjToHEBBh6hiRUPm0lf0");
+        const userDocSnapshot = await getDoc(userDocRef);
+
+        if (userDocSnapshot.exists()) {
+          const userData = userDocSnapshot.data(); // Get user data
           setName(userData.name);
           setEmail(userData.email);
           setPhone(userData.phone);
@@ -27,6 +38,8 @@ export default function ProfileDetails() {
         console.error("Error fetching user data: ", error);
       }
     };
+
+    // Update the component's state if there's updated data from route params
     if (route.params?.updatedName) {
       setName(route.params.updatedName);
     }
@@ -37,124 +50,79 @@ export default function ProfileDetails() {
       setPhone(route.params.updatedPhone);
     }
     fetchData();
-  }, [userId, route.params]);
+  }, [route.params]);
+
+  // Handle navigation to the "Profile" screen for editing user data
   const handleEditProfile = () => {
-    navigation.navigate("Profile", { userId });
+    navigation.navigate("Profile", { userId: "TjToHEBBh6hiRUPm0lf0" });
   };
-  const handleDelete=() =>{
-    deleteDoc(doc(db, "users", userId))
+
+  // Handle user data deletion and navigate to the "Login" screen
+  const handleDelete = () => {
+    deleteDoc(doc(db, "users", "TjToHEBBh6hiRUPm0lf0"))
       .then(() => {
-        console.log("data deleted");
+        console.log("Data deleted");
         navigation.navigate("Login");
       })
       .catch((error) => {
         console.log(error);
       });
-  }
-  const showProfileUpdatedToast = () => {
-    Toast.show({
-      type: "success",
-      position: "bottom",
-      text1: "Profile Updated",
-      visibilityTime: 3000,
-      onShow: () => {
-        navigation.navigate("ProfileDetails", userId );
-      },
-    });
   };
 
   return (
-    <View style={styles.container}>
-      <Text style={styles.topicReg}>
-        <b>Hi, {name}</b>
-      </Text><br/>
-      <View style={styles.labelContainer}>
-        <Text style={styles.label}>Name:</Text>
-        <TextInput
-          value={name}
-          style={[styles.input, styles.inputWidth]}
-          editable={false}
-          selectable={false}
+    <View>
+      <TouchableOpacity onPress={() => navigation.navigate("Home")}>
+        <Image
+          source={require("../assets/bck.png")}
+          style={{ width: 50, height: 50, marginTop: 8, marginLeft: 3 }}
         />
-      </View>
-      <View style={styles.labelContainer}>
-        <Text style={styles.label}>Email:</Text>
-        <TextInput
-          value={email}
-          style={[styles.input, styles.inputWidth]}
-          editable={false}
-          selectable={false}
-        />
-      </View>
-      <View style={styles.labelContainer}>
-        <Text style={styles.label}>Phone Number:</Text>
-        <TextInput
-          value={phone}
-          style={[styles.input, styles.inputWidth]}
-          editable={false}
-          selectable={false}
-        />
-      </View><br /><br />
-      <View style={[styles.button, styles.inputWidth]}>
-        <Text onPress={handleEditProfile} style={styles.buttonText}>
-          <b>Edit Profile Data</b>
+      </TouchableOpacity>
+
+      <View style={styles.container}>
+        <Text style={styles.topicReg}>
+          <b>Hi, {name}</b>
         </Text>
+
+        <View style={styles.labelContainer}>
+          <Text style={styles.label}>Name:</Text>
+          <TextInput
+            value={name}
+            style={[styles.input, styles.inputWidth]}
+            editable={false} // Make the input field non-editable
+            selectable={false} // Make the text non-selectable
+          />
+        </View>
+        <View style={styles.labelContainer}>
+          <Text style={styles.label}>Email:</Text>
+          <TextInput
+            value={email}
+            style={[styles.input, styles.inputWidth]}
+            editable={false} // Make the input field non-editable
+            selectable={false} // Make the text non-selectable
+          />
+        </View>
+        <View style={styles.labelContainer}>
+          <Text style={styles.label}>Phone Number:</Text>
+          <TextInput
+            value={phone}
+            style={[styles.input, styles.inputWidth]}
+            editable={false} // Make the input field non-editable
+            selectable={false} // Make the text non-selectable
+          />
+        </View>
+
+        <View style={[styles.button, styles.inputWidth]}>
+          <Text onPress={handleEditProfile} style={styles.buttonText}>
+            <b>Edit Profile Data</b>
+          </Text>
+        </View>
+        <View style={[styles.button, styles.inputWidth]}>
+          <Text style={styles.buttonText} onPress={handleDelete}>
+            <b>Delete Profile</b>
+          </Text>
+        </View>
+        <Toast ref={(ref) => Toast.setRef(ref)} />
       </View>
-      <View style={[styles.button, styles.inputWidth]}>
-        <Text style={styles.buttonText} onPress={handleDelete }>
-          <b>Delete Profile</b>
-        </Text>
-      </View>
-      <Toast ref={(ref) => Toast.setRef(ref)} />
     </View>
   );
 }
-
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    backgroundColor: "white",
-    alignItems: "center",
-    justifyContent: "center",
-  },
-  labelContainer: {
-    flexDirection: "row",
-    alignItems: "center",
-    marginTop: 30,
-  },
-  label: {
-    color: "black",
-    width: 120,
-  },
-  topicReg: {
-    color: "black",
-    fontSize: 30,
-    
-  },
-  input: {
-    height: 50,
-    borderWidth: 2,
-    borderColor: "black",
-    color: "black",
-    padding: 10,
-    borderRadius: 10,
-  },
-  inputWidth: {
-    width: "80%",
-  },
-  whiteText: {
-    color: "black",
-  },
-  button: {
-    width: "80%",
-    backgroundColor: "black",
-    height: 50,
-    borderRadius: 10,
-    marginTop: 30,
-  },
-  buttonText: {
-    color: "white",
-    textAlign: "center",
-    paddingTop: 10,
-  },
-});

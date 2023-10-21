@@ -15,13 +15,15 @@ import { useRoute } from "@react-navigation/native";
 import { useNavigation } from "@react-navigation/native";
 
 export default function BusList() {
+  const route = useRoute();
   const [busData, setBusData] = useState([]);
   const { params } = useRoute();
   const { from, to } = params;
   const navigation = useNavigation();
+  const userName = route.params && route.params.userName;
 
   const handleSearch = () => {
-    // Implement your search logic here
+
     console.log("From:", from);
     console.log("To:", to);
   };
@@ -56,7 +58,7 @@ export default function BusList() {
 
   return (
     <View style={styles.container}>
-      <CommonHeader />
+      <CommonHeader userName={userName} />
       <View style={styles.marginContainer}>
         <View style={styles.rectangle}>
           <Text style={styles.tltJourney}>Enter Your Journey</Text>
@@ -133,7 +135,7 @@ const styles = StyleSheet.create({
     marginHorizontal: 20,
   },
   rectangle: {
-    height: 347, // Set the height to 347
+    height: 347, 
     width: "100%",
     backgroundColor: "#E2E0E0",
     padding: 20,

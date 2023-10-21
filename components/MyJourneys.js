@@ -22,8 +22,7 @@ export default function MyJourneys() {
   const journeyImage = require("../assets/journey.png");
 
   const handleNavigateHome = () => {
-    // Navigate to BusList and pass 'from' and 'to' as route parameters
-    navigation.navigate("Home");
+    navigation.navigate("WebHome");
   };
   useEffect(() => {
     const q = query(collection(db, "journeys"), where("user", "==", user));

@@ -4,9 +4,9 @@ import { collection, doc, getDocs, query, where } from "firebase/firestore";
 import { db } from "./config.jsx"; // Importing a database connection
 import { useNavigation } from '@react-navigation/native';
 import Toast from 'react-native-toast-message'; // Importing a toast message component
-import { styles } from "../css/LoginStyles" // Importing CSS styles
+import { styles } from "../css/LoginStylesWeb.js" // Importing CSS styles
 
-export default function Login() {
+export default function LoginWeb() {
   const [email, setEmail] = useState(""); // State for email input
   const [password, setPassword] = useState(""); // State for password input
   const [userData, setUserData] = useState(null); // State to store user data
