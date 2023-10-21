@@ -30,6 +30,8 @@ export default function MyCredit() {
           const data = creditDocSnapshot.data();
           setCreditAmount(data.amount);
           setLastTopUpDate(data.date);
+
+          fetchCreditHistory();
         }
       } catch (error) {
         console.error("Error fetching data: ", error);
@@ -39,27 +41,35 @@ export default function MyCredit() {
     fetchData();
   }, []);
 
-  useEffect(() => {
+ 
     // Fetch credit history data from Firestore
     const fetchCreditHistory = async () => {
       try {
         const creditDocRef = doc(db, "credits", "Q8ZqHR2BlZPnWcMHc4qQ"); // Replace with your Firestore document ID
         const historyCollectionRef = collection(creditDocRef, "topUpHistory");
         const historyQuerySnapshot = await getDocs(historyCollectionRef);
-
+  
         const historyData = [];
         historyQuerySnapshot.forEach((doc) => {
           historyData.push(doc.data());
         });
-
+  
+        // Log the history data to the console for debugging
+        console.log("Credit History Data:", historyData);
+  
         setCreditHistory(historyData);
       } catch (error) {
         console.error("Error fetching credit history from Firestore: ", error);
       }
     };
-
-    fetchCreditHistory();
-  }, []);
+  
+    useEffect(() => {
+      fetchCreditHistory();
+    }
+  , []);
+  
+  
+  
 
   return (
     <View style={styles.container}>
@@ -75,7 +85,7 @@ export default function MyCredit() {
             <Text style={styles.largeRectangleText}>{creditAmount}</Text>
             <Text style={styles.mediumRectangleText}>Remaining Credits</Text>
             <Text style={styles.smallRectangleText}>
-              Last top-up date - {lastTopUpDate}
+              Last top-up date - 12/10/2023
             </Text>
           </View>
         </View>
