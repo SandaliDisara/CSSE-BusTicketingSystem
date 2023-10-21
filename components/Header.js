@@ -5,7 +5,7 @@ import { FontAwesome } from "@expo/vector-icons";
 export default function CommonHeader() {
   return (
     <View style={styles.header}>
-      <Text style={styles.headerText}>Hello,{"\n"}Sandali Disara</Text>
+      <Text style={styles.headerText}>Hello,{"\n"}Kulanaka</Text>
       <TouchableOpacity style={styles.menuButton}>
         <View style={styles.menuIconCircle}>
           <FontAwesome name="bars" size={23} color="white" />
