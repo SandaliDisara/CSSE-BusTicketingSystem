@@ -12,59 +12,71 @@ import { doc, updateDoc, collection, addDoc, getDoc } from "firebase/firestore";
 export default function TopUpOptions() {
   const [topUpAmount, setTopUpAmount] = useState("");
 
+  
+
   // Function to fetch the current credit amount from the database
-  async function fetchCreditAmount() {
-    try {
-      const creditDocRef = doc(db, "credits", "Q8ZqHR2BlZPnWcMHc4qQ");
-  
-      // Fetch the document data
-      const creditDocSnapshot = await getDoc(creditDocRef);
-  
-      if (creditDocSnapshot.exists()) {
-        const creditData = creditDocSnapshot.data();
-        const amount = creditData.amount;
-        return amount;
-      } else {
-        // Handle the case where the document doesn't exist
-        return null;
-      }
-    } catch (error) {
-      console.error("Error fetching credit amount:", error);
+async function fetchCreditAmount() {
+  try {
+    const creditDocRef = doc(db, "credits", "Q8ZqHR2BlZPnWcMHc4qQ");
+
+    // Fetch the document data
+    const creditDocSnapshot = await getDoc(creditDocRef);
+
+    if (creditDocSnapshot.exists()) {
+      const creditData = creditDocSnapshot.data();
+      const amount = creditData.amount;
+      console.log("Amount:", amount);
+      return amount;
+    } else {
+      // Handle the case where the document doesn't exist
       return null;
     }
+
+    
+
+  } catch (error) {
+    console.error("Error fetching credit amount:", error);
+    return null;
   }
+}
+
 
   // Function to handle the top-up operation and update credit data
   const handleTopUp = async (amount) => {
     try {
-      const parsedAmount = parseInt(fetchCreditAmount()) || 0;
-      const newAmount = parseInt(fetchCreditAmount()) + amount;
-
-      const customDate = "12-12-2023";
-
-      const creditDocRef = doc(db, "credits", "Q8ZqHR2BlZPnWcMHc4qQ");
-      await updateDoc(creditDocRef, {
-        creditAmount: amount,
-      });
-
-      const topUpHistoryCollectionRef = collection(creditDocRef, "topUpHistory");
-      await addDoc(topUpHistoryCollectionRef, {
-        amount: amount,
-        date: customDate,
-      });
-
-      // Log the updated amounts to the console
-      console.log("Added Amount:", amount);
-      console.log(fetchCreditAmount());
-      console.log("New Amount:", newAmount);
-
-      // UpdateCreditAmount should be a function defined in the parent component
-      updateCreditAmount(newAmount);
-      setTopUpAmount("");
+      const currentCreditAmount = await fetchCreditAmount(); // Fetch the current credit amount
+  
+      if (currentCreditAmount !== null) {
+        const newAmount = currentCreditAmount + amount;
+        const customDate = "12-12-2023";
+  
+        const creditDocRef = doc(db, "credits", "Q8ZqHR2BlZPnWcMHc4qQ");
+  
+        // Update the "amount" field in the credits collection
+        await updateDoc(creditDocRef, {
+          amount: newAmount, // Update the "amount" field
+        });
+  
+        // Add the top-up record to the "topUpHistory" collection
+        const topUpHistoryCollectionRef = collection(creditDocRef, "topUpHistory");
+        await addDoc(topUpHistoryCollectionRef, {
+          amount: amount,
+          date: customDate,
+        });
+  
+        // Log the updated amounts to the console
+        console.log("Added Amount:", amount);
+        console.log("New Amount:", newAmount);
+  
+        setTopUpAmount("");
+      } else {
+        console.log("Error: Could not fetch current credit amount");
+      }
     } catch (error) {
       console.error("Error handling top-up:", error);
     }
   }
+  
 
   return (
     <View style={styles.container}>
