@@ -23,7 +23,7 @@ export default function BusList() {
   const userName = route.params && route.params.userName;
 
   const handleSearch = () => {
-    // Implement your search logic here
+
     console.log("From:", from);
     console.log("To:", to);
   };
@@ -135,7 +135,7 @@ const styles = StyleSheet.create({
     marginHorizontal: 20,
   },
   rectangle: {
-    height: 347, // Set the height to 347
+    height: 347, 
     width: "100%",
     backgroundColor: "#E2E0E0",
     padding: 20,

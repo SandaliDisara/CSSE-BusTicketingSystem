@@ -13,7 +13,7 @@ export default function BusInfo() {
       // Display the QR code image
       return (
         <Image
-          source={require("../assets/qrcode.png")} // Replace with your QR code image source
+          source={require("../assets/qrcode.png")} 
           style={styles.qrCodeImage}
         />
       );
@@ -150,7 +150,7 @@ const styles = StyleSheet.create({
     color: "#979696",
   },
   qrCodeImage: {
-    width: 250, // Adjust the width and height as needed
+    width: 250, 
     height: 250,
   },
   downloadButton: {

@@ -62,5 +62,4 @@ describe('Register', () => {
     expect(getByText('Registered Successfully!')).toBeTruthy();
   });
 
-  // Add more test cases to cover other component behavior and validation.
 });

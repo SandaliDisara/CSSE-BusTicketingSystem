@@ -14,6 +14,7 @@
     "@react-navigation/native-stack": "^6.9.14",
     "expo": "~49.0.5",
     "expo-asset": "~8.10.1",
+    "expo-cli": "^6.3.10",
     "expo-status-bar": "~1.6.0",
     "firebase": "^10.4.0",
     "react": "18.2.0",
@@ -25,10 +26,12 @@
     "react-native-select-dropdown": "^3.3.4",
     "react-native-svg": "^13.14.0",
     "react-native-toast-message": "^2.1.6",
+    "react-native-vector-icons": "^10.0.0",
     "react-native-web": "~0.19.6"
   },
   "devDependencies": {
     "@babel/core": "^7.20.0",
+    "@types/firebase": "^3.2.1",
     "@react-navigation/native": "^6.1.8",
     "@react-navigation/stack": "^6.3.18",
     "@testing-library/jest-native": "^5.4.3",

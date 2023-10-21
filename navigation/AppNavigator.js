@@ -10,6 +10,8 @@ import Login from "../components/Login";
 import Register from "../components/Register";
 import ProfileDetails from "../components/ProfileDetails";
 import Profile from "../components/Profile";
+import WebHome from "../components/WebHome";
+import MyJourneys from "../components/MyJourneys";
 import ViewProfile from "../components/ViewProfile";
 import LoginWeb from "../components/LoginWeb";
 
@@ -18,6 +20,7 @@ export default function AppNavigator() {
   return (
     <NavigationContainer>
       <Stack.Navigator>
+      
         <Stack.Screen
           name="Login"
           component={Login}
@@ -53,6 +56,17 @@ export default function AppNavigator() {
           component={Profile}
           options={{ headerShown: false }}
         />
+        <Stack.Screen
+          name="WebMyJourney"
+          component={MyJourneys}
+          options={{ headerShown: false }}
+        />
+        <Stack.Screen
+          name="WebHome"
+          component={WebHome}
+          options={{ headerShown: false }}
+        />
+        
       </Stack.Navigator>
     </NavigationContainer>
   );

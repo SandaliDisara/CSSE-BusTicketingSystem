@@ -30,6 +30,8 @@ export default function MyCredit() {
           const data = creditDocSnapshot.data();
           setCreditAmount(data.amount);
           setLastTopUpDate(data.date);
+
+          fetchCreditHistory();
         }
       } catch (error) {
         console.error("Error fetching data: ", error);
@@ -39,27 +41,35 @@ export default function MyCredit() {
     fetchData();
   }, []);
 
-  useEffect(() => {
+ 
     // Fetch credit history data from Firestore
     const fetchCreditHistory = async () => {
       try {
         const creditDocRef = doc(db, "credits", "Q8ZqHR2BlZPnWcMHc4qQ"); // Replace with your Firestore document ID
         const historyCollectionRef = collection(creditDocRef, "topUpHistory");
         const historyQuerySnapshot = await getDocs(historyCollectionRef);
-
+  
         const historyData = [];
         historyQuerySnapshot.forEach((doc) => {
           historyData.push(doc.data());
         });
-
+  
+        // Log the history data to the console for debugging
+        console.log("Credit History Data:", historyData);
+  
         setCreditHistory(historyData);
       } catch (error) {
         console.error("Error fetching credit history from Firestore: ", error);
       }
     };
-
-    fetchCreditHistory();
-  }, []);
+  
+    useEffect(() => {
+      fetchCreditHistory();
+    }
+  , []);
+  
+  
+  
 
   return (
     <View style={styles.container}>
@@ -75,7 +85,7 @@ export default function MyCredit() {
             <Text style={styles.largeRectangleText}>{creditAmount}</Text>
             <Text style={styles.mediumRectangleText}>Remaining Credits</Text>
             <Text style={styles.smallRectangleText}>
-              Last top-up date - {lastTopUpDate}
+              Last top-up date - 12/10/2023
             </Text>
           </View>
         </View>
@@ -116,7 +126,7 @@ const styles = StyleSheet.create({
   },
   rectangle: {
     padding: 20,
-    backgroundColor: "black", // Adjust as needed
+    backgroundColor: "black", 
     borderWidth: 1,
     borderColor: "#E2E0E0",
   },
@@ -126,7 +136,7 @@ const styles = StyleSheet.create({
   },
   creditText: {
     fontSize: 18,
-    color: "white", // Adjust the color as needed
+    color: "white", 
   },
   creditValue: {
     fontSize: 24,
@@ -185,12 +195,12 @@ const styles = StyleSheet.create({
     flex: 1,
     justifyContent: "center",
     alignItems: "center",
-    marginLeft: 40, // Adjusted margin
+    marginLeft: 40, 
   },
   textContainer: {
     flex: 3,
     justifyContent: "center",
-    marginLeft: 20, // Adjusted margin
+    marginLeft: 20, 
   },
   largeRectangleText: {
     fontSize: 32,
